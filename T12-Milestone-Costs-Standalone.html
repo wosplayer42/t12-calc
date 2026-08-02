@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#07090f" />
+  <title>T12 Milestone Costs · Innocent Panda Labs - State 1721</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+
+    :root {
+      --bg-0: #0a0c12;
+      --bg-1: #121722;
+      --bg-2: #181e2c;
+      --border: rgba(255, 255, 255, 0.1);
+      --text-0: #f4f6fb;
+      --text-1: #c5cde0;
+      --text-2: #8b95ad;
+      --accent: #fbbf24;
+      --accent-2: #f87171;
+      --good: #4ade80;
+      --c-steel: #e2e8f0;
+      --c-rfc: #fbbf24;
+      --c-shard: #c4b5fd;
+      --c-meat: #fca5a5;
+      --c-wood: #86efac;
+      --c-coal: #94a3b8;
+      --c-iron: #7dd3fc;
+      --c-time: #93c5fd;
+      --font: "Outfit", system-ui, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(251, 191, 36, 0.08), transparent),
+                  radial-gradient(900px 500px at 100% 0%, rgba(248, 113, 113, 0.06), transparent),
+                  var(--bg-0);
+      color: var(--text-0);
+      padding: 28px 20px 56px;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.45;
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; }
+    header {
+      display: flex; flex-wrap: wrap; align-items: flex-start;
+      justify-content: space-between; gap: 14px; margin-bottom: 20px;
+    }
+    .brand { display: flex; gap: 14px; align-items: center; }
+    .mark {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: grid; place-items: center;
+      font-weight: 700; font-size: 0.9rem; color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 6px 18px rgba(251, 191, 36, 0.25);
+    }
+    h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+    .sub { font-size: 0.8rem; color: var(--text-2); margin-top: 3px; }
+    .links a { color: var(--accent); font-size: 0.92rem; font-weight: 500; text-decoration: none; }
+    .links a:hover { text-decoration: underline; }
+    .banner {
+      font-size: 0.98rem; color: var(--text-1); line-height: 1.55;
+      padding: 14px 16px; border-radius: 14px;
+      border: 1px solid rgba(251, 191, 36, 0.28);
+      background: rgba(251, 191, 36, 0.1);
+      margin-bottom: 22px;
+    }
+    .banner strong { color: var(--text-0); }
+    .section-title {
+      font-size: 1.05rem; font-weight: 700; margin: 8px 0 10px;
+      letter-spacing: -0.01em;
+    }
+    .section-desc {
+      font-size: 0.88rem; color: var(--text-2); margin: -4px 0 12px; line-height: 1.45;
+    }
+    .card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 8px 10px 12px;
+      overflow-x: auto;
+      margin-bottom: 28px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    }
+    table {
+      width: 100%; border-collapse: separate; border-spacing: 0; min-width: 900px;
+    }
+    thead th {
+      position: sticky; top: 0; z-index: 2;
+      background: #222a3c;
+      font-size: 0.78rem; color: var(--text-0); font-weight: 600;
+      white-space: nowrap; text-align: right; padding: 14px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+    }
+    thead th:first-child { text-align: left; border-radius: 10px 0 0 0; }
+    thead th:last-child { border-radius: 0 10px 0 0; }
+    thead th .th-sub {
+      display: block; font-size: 0.68rem; font-weight: 500; color: var(--text-2); margin-top: 2px;
+    }
+    th.col-rfc, td.col-rfc { color: var(--c-rfc); }
+    th.col-shard, td.col-shard { color: var(--c-shard); }
+    th.col-meat, td.col-meat { color: var(--c-meat); }
+    th.col-wood, td.col-wood { color: var(--c-wood); }
+    th.col-coal, td.col-coal { color: var(--c-coal); }
+    th.col-iron, td.col-iron { color: var(--c-iron); }
+    th.col-time, td.col-time { color: var(--c-time); }
+    th.col-steel, td.col-steel { color: var(--c-steel); }
+    td {
+      padding: 15px 14px; border-bottom: 1px solid var(--border);
+      text-align: right; font-family: var(--mono); font-size: 0.9rem;
+      font-weight: 500; font-variant-numeric: tabular-nums; color: var(--text-1);
+      vertical-align: middle;
+    }
+    th:first-child, td:first-child {
+      text-align: left; position: sticky; left: 0; z-index: 1; min-width: 240px;
+    }
+    td:first-child {
+      font-family: var(--font); font-size: 0.98rem; font-weight: 600;
+      color: var(--text-0); background: var(--bg-2);
+    }
+    tbody tr:nth-child(even) td { background: rgba(255, 255, 255, 0.02); }
+    tbody tr:nth-child(even) td:first-child { background: #1a2130; }
+    tr.tier-early td { box-shadow: inset 3px 0 0 #38bdf8; }
+    tr.tier-joiner td { box-shadow: inset 3px 0 0 #fbbf24; }
+    tr.tier-support td { box-shadow: inset 3px 0 0 #34d399; }
+    tr.tier-combo td { box-shadow: inset 3px 0 0 #fb923c; }
+    tr.tier-double td { background: rgba(74, 222, 128, 0.05); }
+    tr.tier-double td:first-child { background: rgba(74, 222, 128, 0.08); }
+    tr.tier-triple td { background: rgba(167, 139, 250, 0.06); }
+    tr.tier-triple td:first-child { background: rgba(167, 139, 250, 0.1); }
+    tbody tr:hover td { background: rgba(251, 191, 36, 0.08) !important; color: var(--text-0); }
+    tbody tr:hover td:first-child { background: rgba(251, 191, 36, 0.12) !important; }
+    .goal-sub {
+      display: block; font-size: 0.78rem; font-weight: 400;
+      color: var(--text-2); margin-top: 4px; line-height: 1.35; max-width: 320px;
+    }
+    .badge {
+      display: inline-block; margin-top: 6px; font-size: 0.7rem; font-weight: 600;
+      padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,0.06); color: var(--text-1);
+    }
+    tr.tier-early .badge { background: rgba(56, 189, 248, 0.15); color: #7dd3fc; }
+    tr.tier-joiner .badge { background: rgba(251, 191, 36, 0.15); color: #fcd34d; }
+    tr.tier-support .badge { background: rgba(52, 211, 153, 0.15); color: #6ee7b7; }
+    tr.tier-combo .badge { background: rgba(251, 146, 60, 0.15); color: #fdba74; }
+    tr.tier-double .badge { background: rgba(74, 222, 128, 0.15); color: #86efac; }
+    tr.tier-triple .badge { background: rgba(167, 139, 250, 0.15); color: #c4b5fd; }
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 10px 16px; margin: 0 0 12px;
+      font-size: 0.82rem; color: var(--text-2);
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+    .note {
+      font-size: 1rem; line-height: 1.6; color: var(--text-1);
+      padding: 16px 18px; border-radius: 14px;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      background: rgba(74, 222, 128, 0.1);
+    }
+    .note strong { color: var(--good); font-weight: 700; }
+    .foot { margin-top: 20px; font-size: 0.78rem; color: var(--text-2); text-align: center; line-height: 1.5; }
+  
+  </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="mark">T12</div>
+        <div>
+          <h1>Milestone Cost Tables</h1>
+          <p class="sub">Innocent Panda Labs · State 1721</p>
+        </div>
+      </div>
+      <div class="links">
+        <a href="T12-Exalted-Research-Standalone.html">Full calculator →</a>
+      </div>
+    </header>
+
+    <p class="banner">
+      All costs assume <strong>starting from zero</strong> on a camp.
+      Each troop type uses the same cost tables (Infantry / Lancer / Marksman).
+      Meat and Wood are listed separately. Time is <strong>raw</strong> (no research speed).
+      Ideal Joiner = Exalted Gear max + all Molten I → 15 + Troop Skill (Unique) Lv 3.
+    </p>
+
+    <h2 class="section-title">1 · Combat milestones</h2>
+    <p class="section-desc">
+      Troop Skill and Ideal Joiner plans only (no Healing, First Aid, or Training).
+    </p>
+    <div class="legend">
+      <span><i class="swatch" style="background:#38bdf8"></i> Early unique</span>
+      <span><i class="swatch" style="background:#fbbf24"></i> Ideal joiner</span>
+      <span><i class="swatch" style="background:#4ade80"></i> Multi-type</span>
+    </div>
+    <div class="card">
+      <table><thead id="head1"></thead><tbody id="body1"></tbody></table>
+    </div>
+
+    <h2 class="section-title">2 · Support tracks (Healing / First Aid / Training)</h2>
+    <p class="section-desc">
+      Each track is maxed to <strong>level 10</strong>. “One track” is a single research line.
+      “One troop type” = all three tracks (Healing + First Aid + Training) for that camp.
+    </p>
+    <div class="legend">
+      <span><i class="swatch" style="background:#34d399"></i> Support totals</span>
+    </div>
+    <div class="card">
+      <table><thead id="head2"></thead><tbody id="body2"></tbody></table>
+    </div>
+
+    <h2 class="section-title">3 · Combat milestone + support (to Lv 10)</h2>
+    <p class="section-desc">
+      Same combat goals as table 1, plus full support package
+      (Training + Healing + First Aid all to 10) for that many troop types.
+    </p>
+    <div class="legend">
+      <span><i class="swatch" style="background:#fb923c"></i> Combined plan</span>
+      <span><i class="swatch" style="background:#4ade80"></i> Multi-type</span>
+    </div>
+    <div class="card">
+      <table><thead id="head3"></thead><tbody id="body3"></tbody></table>
+    </div>
+
+    <div class="note">
+      <strong>State 1721 note:</strong> Prefer <strong>Infantry</strong> and <strong>Marksman</strong>
+      for joiner value. Lancer is optional when planning “2 troop types” or “3 troop types”.
+    </div>
+
+    <p class="foot">
+      Innocent Panda Labs · State 1721 · Unofficial fan tool for Whiteout Survival.
+    </p>
+  </div>
+
+  <script>
+/**
+ * T12 / Exalted research cost tables
+ * Meat/Wood rows count as BOTH meat and wood (same value each).
+ */
+const T12_DATA = (() => {
+  // [steel, rfc, shard, meatWood, coal, iron, hours]
+  const empty = () => [0, 0, 0, 0, 0, 0, 0];
+
+  const head = [
+    [40000, 10, 70, 0, 0, 0, 0],
+    [60000, 15, 105, 0, 0, 0, 0],
+    [80000, 20, 140, 0, 0, 0, 0],
+    [100000, 25, 175, 0, 0, 0, 0],
+    [120000, 30, 210, 0, 0, 0, 0],
+  ];
+
+  // Shoulder / Body / Leg / Weapon share the same table
+  const gear = [
+    [36000, 10, 70, 0, 0, 0, 0],
+    [36000, 10, 70, 0, 0, 0, 0],
+    [54000, 15, 105, 0, 0, 0, 0],
+    [72000, 20, 140, 0, 0, 0, 0],
+    [108000, 30, 210, 0, 0, 0, 0],
+  ];
+
+  const skillsI = [
+    [15000, 2, 16, 500000, 100000, 25000, 10],
+    [15750, 2, 17, 520000, 100000, 26000, 10.5],
+    [16500, 2, 17, 550000, 110000, 27000, 11],
+    [17250, 2, 18, 570000, 110000, 28000, 11.5],
+    [18000, 3, 19, 600000, 120000, 30000, 12],
+    [18750, 3, 20, 620000, 120000, 31000, 12.5],
+    [19500, 3, 21, 650000, 130000, 32000, 13],
+    [21000, 3, 22, 700000, 140000, 35000, 14],
+    [22500, 3, 24, 750000, 150000, 37000, 15],
+    [24000, 4, 26, 800000, 160000, 40000, 16],
+    [25500, 4, 27, 850000, 170000, 42000, 17],
+    [27000, 4, 29, 900000, 180000, 45000, 18],
+    [28500, 4, 30, 950000, 190000, 47000, 19],
+    [30000, 5, 32, 1000000, 200000, 50000, 20],
+    [31500, 5, 34, 1000000, 210000, 52000, 21],
+    [33000, 5, 35, 1100000, 220000, 55000, 22],
+    [34500, 5, 37, 1100000, 230000, 57000, 23],
+    [36000, 6, 39, 1200000, 240000, 60000, 24],
+    [37500, 6, 40, 1200000, 250000, 62000, 25],
+    [39000, 6, 42, 1300000, 260000, 65000, 26],
+  ];
+
+  const troopSkill = [
+    [200000, 50, 325, 15000000, 3000000, 750000, 480],
+    [200000, 50, 325, 15000000, 3000000, 750000, 480],
+    [200000, 50, 325, 15000000, 3000000, 750000, 480],
+  ];
+
+  // Molten II Tier: 10 levels each of same cost bands
+  const skillsII = [];
+  const s2bands = [
+    { n: 10, row: [18000, 5, 75, 500000, 100000, 25000, 12] },
+    { n: 10, row: [22500, 6, 93, 620000, 120000, 31000, 15] },
+    { n: 10, row: [27000, 7, 112, 750000, 150000, 37000, 18] },
+    { n: 10, row: [31500, 8, 131, 870000, 170000, 43000, 21] },
+    { n: 10, row: [36000, 10, 150, 1000000, 200000, 50000, 24] },
+  ];
+  for (const b of s2bands) {
+    for (let i = 0; i < b.n; i++) skillsII.push(b.row.slice());
+  }
+
+  const solar = [
+    [25000, 5, 75, 500000, 100000, 25000, 12],
+    [26250, 5, 78, 520000, 100000, 26000, 12.6],
+    [27500, 5, 82, 550000, 110000, 27000, 13.2],
+    [30000, 6, 90, 600000, 120000, 30000, 14.4],
+    [32500, 6, 97, 650000, 130000, 32000, 15.6],
+    [35000, 7, 105, 700000, 140000, 35000, 16.8],
+    [37500, 7, 112, 750000, 150000, 37000, 18],
+    [40000, 8, 120, 800000, 160000, 40000, 19.2],
+    [42500, 8, 127, 850000, 170000, 42000, 20.4],
+    [45000, 9, 135, 900000, 180000, 45000, 21.6],
+    [47500, 9, 142, 950000, 190000, 47000, 22.8],
+    [50000, 10, 150, 1000000, 200000, 50000, 24],
+    [52500, 10, 157, 1000000, 200000, 50000, 25.2],
+    [57500, 11, 172, 1100000, 230000, 57000, 27.6],
+    [62500, 12, 187, 1200000, 250000, 62000, 30],
+  ];
+
+  const skillsIII = [];
+  const s3bands = [
+    { n: 10, row: [25000, 5, 125, 1000000, 200000, 50000, 48] },
+    { n: 10, row: [31250, 6, 156, 1200000, 250000, 62000, 60] },
+    { n: 10, row: [37500, 7, 187, 1500000, 300000, 75000, 72] },
+    { n: 10, row: [43750, 8, 218, 1700000, 350000, 87000, 84] },
+    { n: 10, row: [50000, 10, 250, 2000000, 400000, 100000, 96] },
+  ];
+  for (const b of s3bands) {
+    for (let i = 0; i < b.n; i++) skillsIII.push(b.row.slice());
+  }
+
+  // Exalted Healing / First Aid / Training (Lv 1–10) — same cost curve per track
+  // Time uses the same hours as Molten I Lv1–10 when provided; resources match player data.
+  const support = skillsI.slice(0, 10).map((r) => r.slice());
+
+  const GROUP = {
+    gear: "Exalted Gear (Unlock slots)",
+    molten1: "Molten I Tier",
+    unique: "Troop Skill (Unique)",
+    support: "Support · Healing / First Aid / Training",
+    molten2: "Molten II Tier",
+    solar: "Solar Supremacy",
+    molten3: "Molten III Tier",
+  };
+
+  const SUPPORT_GROUP = GROUP.support;
+  const supportNodes = [
+    { id: "ex_training", label: "Exalted Training", group: GROUP.support, max: 10, table: support, tier: 2, kind: "support" },
+    { id: "ex_healing", label: "Exalted Healing", group: GROUP.support, max: 10, table: support, tier: 2, kind: "support" },
+    { id: "ex_firstaid", label: "Exalted First Aid", group: GROUP.support, max: 10, table: support, tier: 2, kind: "support" },
+  ];
+
+  function withSupport(list) {
+    // Insert support section after Troop Skill (unique), before Molten II
+    const out = [];
+    for (const n of list) {
+      out.push(n);
+      if (n.id === "unique") out.push(...supportNodes.map((s) => ({ ...s })));
+    }
+    return out;
+  }
+
+  /** @type {Record<string, {id:string,label:string,group:string,max:number,table:number[][],tier:number}[]>} */
+  const troops = {
+    infantry: withSupport([
+      { id: "head", label: "Exalted Helm", group: GROUP.gear, max: 5, table: head, tier: 1, kind: "gear" },
+      { id: "shoulder", label: "Exalted Shoulderguard", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "body", label: "Exalted Bastion", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "leg", label: "Exalted Trek", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "weapon", label: "Exalted Armament", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "s1_atk", label: "Molten Shields I (Attack)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "atk", kind: "molten1" },
+      { id: "s1_let", label: "Molten Blades I (Lethality)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "let", kind: "molten1" },
+      { id: "s1_hp", label: "Molten Plating I (Health)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "hp", kind: "molten1" },
+      { id: "s1_def", label: "Molten Guard I (Defense)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "def", kind: "molten1" },
+      { id: "unique", label: "Indomitable Wall", group: GROUP.unique, max: 3, table: troopSkill, tier: 2, kind: "unique" },
+      { id: "s2_atk", label: "Molten Shields II (Attack)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "atk", kind: "molten2" },
+      { id: "s2_let", label: "Molten Blades II (Lethality)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "let", kind: "molten2" },
+      { id: "s2_hp", label: "Molten Plating II (Health)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "hp", kind: "molten2" },
+      { id: "s2_def", label: "Molten Guard II (Defense)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "def", kind: "molten2" },
+      { id: "solar", label: "Solar Supremacy", group: GROUP.solar, max: 15, table: solar, tier: 3, kind: "solar" },
+      { id: "s3_atk", label: "Molten Shields III (Attack)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "atk", kind: "molten3" },
+      { id: "s3_let", label: "Molten Blades III (Lethality)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "let", kind: "molten3" },
+      { id: "s3_hp", label: "Molten Plating III (Health)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "hp", kind: "molten3" },
+      { id: "s3_def", label: "Molten Guard III (Defense)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "def", kind: "molten3" },
+    ]),
+    lancer: withSupport([
+      { id: "head", label: "Exalted Warcrown", group: GROUP.gear, max: 5, table: head, tier: 1, kind: "gear" },
+      { id: "shoulder", label: "Exalted Pauldron", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "body", label: "Exalted Platemail", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "leg", label: "Exalted Warpath", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "weapon", label: "Exalted Pike", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "s1_atk", label: "Molten Vambrace I (Attack)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "atk", kind: "molten1" },
+      { id: "s1_let", label: "Molten Lance I (Lethality)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "let", kind: "molten1" },
+      { id: "s1_hp", label: "Molten Helmets I (Health)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "hp", kind: "molten1" },
+      { id: "s1_def", label: "Molten Tactics I (Defense)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "def", kind: "molten1" },
+      { id: "unique", label: "Meridian Phalanx", group: GROUP.unique, max: 3, table: troopSkill, tier: 2, kind: "unique" },
+      { id: "s2_atk", label: "Molten Vambrace II (Attack)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "atk", kind: "molten2" },
+      { id: "s2_let", label: "Molten Lance II (Lethality)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "let", kind: "molten2" },
+      { id: "s2_hp", label: "Molten Helmets II (Health)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "hp", kind: "molten2" },
+      { id: "s2_def", label: "Molten Tactics II (Defense)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "def", kind: "molten2" },
+      { id: "solar", label: "Solar Supremacy", group: GROUP.solar, max: 15, table: solar, tier: 3, kind: "solar" },
+      { id: "s3_atk", label: "Molten Vambrace III (Attack)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "atk", kind: "molten3" },
+      { id: "s3_let", label: "Molten Lance III (Lethality)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "let", kind: "molten3" },
+      { id: "s3_hp", label: "Molten Helmets III (Health)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "hp", kind: "molten3" },
+      { id: "s3_def", label: "Molten Tactics III (Defense)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "def", kind: "molten3" },
+    ]),
+    marksman: withSupport([
+      { id: "head", label: "Exalted Veil", group: GROUP.gear, max: 5, table: head, tier: 1, kind: "gear" },
+      { id: "shoulder", label: "Exalted Mantle", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "body", label: "Exalted War Garb", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "leg", label: "Exalted Cadence", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "weapon", label: "Exalted Blunderbuss", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
+      { id: "s1_atk", label: "Molten Grips I (Attack)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "atk", kind: "molten1" },
+      { id: "s1_let", label: "Molten Shot I (Lethality)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "let", kind: "molten1" },
+      { id: "s1_hp", label: "Molten Scales I (Health)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "hp", kind: "molten1" },
+      { id: "s1_def", label: "Molten Sharpshooting I (Defense)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "def", kind: "molten1" },
+      { id: "unique", label: "Starfire", group: GROUP.unique, max: 3, table: troopSkill, tier: 2, kind: "unique" },
+      { id: "s2_atk", label: "Molten Grips II (Attack)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "atk", kind: "molten2" },
+      { id: "s2_let", label: "Molten Shot II (Lethality)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "let", kind: "molten2" },
+      { id: "s2_hp", label: "Molten Scales II (Health)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "hp", kind: "molten2" },
+      { id: "s2_def", label: "Molten Sharpshooting II (Defense)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "def", kind: "molten2" },
+      { id: "solar", label: "Solar Supremacy", group: GROUP.solar, max: 15, table: solar, tier: 3, kind: "solar" },
+      { id: "s3_atk", label: "Molten Grips III (Attack)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "atk", kind: "molten3" },
+      { id: "s3_let", label: "Molten Shot III (Lethality)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "let", kind: "molten3" },
+      { id: "s3_hp", label: "Molten Scales III (Health)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "hp", kind: "molten3" },
+      { id: "s3_def", label: "Molten Sharpshooting III (Defense)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "def", kind: "molten3" },
+    ]),
+  };
+
+  const TROOP_META = {
+    infantry: { name: "Infantry", icon: "🛡️" },
+    lancer: { name: "Lancer", icon: "🗡️" },
+    marksman: { name: "Marksman", icon: "🎯" },
+  };
+
+  /** Sum cost rows for levels (current, target] — levels are 1-indexed in tables */
+  function costRange(table, current, target) {
+    const out = empty();
+    const from = Math.max(0, current | 0);
+    const to = Math.min(table.length, Math.max(0, target | 0));
+    for (let lv = from; lv < to; lv++) {
+      const row = table[lv];
+      if (!row) continue;
+      for (let i = 0; i < 7; i++) out[i] += row[i] || 0;
+    }
+    return out;
+  }
+
+  function tier1Levels(state, troop) {
+    const nodes = troops[troop] || [];
+    return nodes.filter((n) => n.tier === 1).reduce((s, n) => s + (state[n.id]?.cur || 0), 0);
+  }
+
+  /** Cost of maxing one support track (Healing OR First Aid OR Training) to 10 */
+  function supportOneTrack() {
+    return costRange(support, 0, 10);
+  }
+
+  /** Cost of maxing all 3 support tracks for one troop type */
+  function supportOneTroop() {
+    const one = supportOneTrack();
+    return one.map((v) => v * 3);
+  }
+
+  /** Cost of maxing all 3 support tracks for all 3 troop types */
+  function supportAllTroops() {
+    return supportOneTroop().map((v) => v * 3);
+  }
+
+  return {
+    troops,
+    TROOP_META,
+    GROUP,
+    costRange,
+    tier1Levels,
+    empty,
+    support,
+    supportOneTrack,
+    supportOneTroop,
+    supportAllTroops,
+    SUPPORT_GROUP,
+  };
+})();
+
+if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
+
+  </script>
+  <script>
+
+    (() => {
+      const nodes = T12_DATA.troops.infantry;
+
+      function costPlan(plan, includeSupport) {
+        let total = T12_DATA.empty();
+        for (const n of nodes) {
+          let tgt = 0;
+          if (n.kind === "support") {
+            tgt = includeSupport ? 10 : 0;
+          } else if (n.kind === "gear") tgt = plan.unlock || 0;
+          else if (n.kind === "molten1") tgt = plan.skillsI || 0;
+          else if (n.kind === "unique") tgt = plan.unique || 0;
+          tgt = Math.min(n.max, tgt);
+          if (tgt <= 0) continue;
+          const part = T12_DATA.costRange(n.table, 0, tgt);
+          for (let i = 0; i < 7; i++) total[i] += part[i];
+        }
+        return total;
+      }
+
+      function mul(row, k) {
+        return row.map((v) => v * k);
+      }
+
+      function add(a, b) {
+        return a.map((v, i) => v + b[i]);
+      }
+
+      function fmt(n) {
+        return Math.round(n).toLocaleString();
+      }
+
+      function fmtHours(h) {
+        if (!h || h <= 0) return "—";
+        const totalMin = Math.round(h * 60);
+        const d = Math.floor(totalMin / (60 * 24));
+        const hr = Math.floor((totalMin % (60 * 24)) / 60);
+        const m = totalMin % 60;
+        const parts = [];
+        if (d) parts.push(d + "d");
+        if (hr) parts.push(hr + "h");
+        if (m && !d) parts.push(m + "m");
+        return parts.join(" ") || "0";
+      }
+
+      const thead = `
+        <tr>
+          <th>Milestone</th>
+          <th class="col-steel">Steel</th>
+          <th class="col-rfc">Refined FC<span class="th-sub">crystals</span></th>
+          <th class="col-shard">FC Shards</th>
+          <th class="col-meat">Meat</th>
+          <th class="col-wood">Wood</th>
+          <th class="col-coal">Coal</th>
+          <th class="col-iron">Iron</th>
+          <th class="col-time">Time<span class="th-sub">raw</span></th>
+        </tr>`;
+
+      function rowHtml(label, sub, badge, costs, rowClass) {
+        return `<tr class="${rowClass}">
+          <td>
+            <span class="goal-title">${label}</span>
+            <span class="goal-sub">${sub}</span>
+            <span class="badge">${badge}</span>
+          </td>
+          <td class="col-steel">${fmt(costs[0])}</td>
+          <td class="col-rfc">${fmt(costs[1])}</td>
+          <td class="col-shard">${fmt(costs[2])}</td>
+          <td class="col-meat">${fmt(costs[3])}</td>
+          <td class="col-wood">${fmt(costs[3])}</td>
+          <td class="col-coal">${fmt(costs[4])}</td>
+          <td class="col-iron">${fmt(costs[5])}</td>
+          <td class="col-time">${fmtHours(costs[6])}</td>
+        </tr>`;
+      }
+
+      const skill1 = costPlan({ unlock: 5, skillsI: 5, unique: 1 }, false);
+      const skill2 = costPlan({ unlock: 5, skillsI: 10, unique: 2 }, false);
+      const joiner = costPlan({ unlock: 5, skillsI: 15, unique: 3 }, false);
+
+      const oneTrack = T12_DATA.supportOneTrack();
+      const oneTroopSupport = T12_DATA.supportOneTroop();
+
+      document.getElementById("head1").innerHTML = thead;
+      document.getElementById("head2").innerHTML = thead;
+      document.getElementById("head3").innerHTML = thead;
+
+      document.getElementById("body1").innerHTML = [
+        rowHtml(
+          "Troop Skill Level 1",
+          "Exalted Gear max + Molten I → 5 + Unique Lv 1",
+          "1 troop type",
+          skill1,
+          "tier-early"
+        ),
+        rowHtml(
+          "Troop Skill level 2",
+          "Exalted Gear max + Molten I → 10 + Unique Lv 2",
+          "1 troop type",
+          skill2,
+          "tier-early"
+        ),
+        rowHtml(
+          "Ideal Joiner",
+          "Exalted Gear max + Molten I → 15 + Unique Lv 3",
+          "1 troop type",
+          joiner,
+          "tier-joiner"
+        ),
+        rowHtml(
+          "Ideal Joiner",
+          "Same plan × 2 camps (e.g. Infantry + Marksman)",
+          "2 troop types",
+          mul(joiner, 2),
+          "tier-joiner tier-double"
+        ),
+        rowHtml(
+          "Ideal Joiner",
+          "Same plan × 3 camps (Infantry + Lancer + Marksman)",
+          "3 troop types",
+          mul(joiner, 3),
+          "tier-joiner tier-triple"
+        ),
+      ].join("");
+
+      document.getElementById("body2").innerHTML = [
+        rowHtml(
+          "One support track → Lv 10",
+          "Healing <em>or</em> First Aid <em>or</em> Training (single line)",
+          "1 track",
+          oneTrack,
+          "tier-support"
+        ),
+        rowHtml(
+          "All 3 support tracks → Lv 10",
+          "Healing + First Aid + Training for one camp",
+          "1 troop type",
+          oneTroopSupport,
+          "tier-support"
+        ),
+        rowHtml(
+          "All 3 support tracks × 2 camps",
+          "Healing + First Aid + Training for two camps (e.g. Infantry + Marksman)",
+          "2 troop types",
+          mul(oneTroopSupport, 2),
+          "tier-support tier-double"
+        ),
+        rowHtml(
+          "All 3 support tracks × 3 camps",
+          "Healing + First Aid + Training for all three camps",
+          "3 troop types",
+          mul(oneTroopSupport, 3),
+          "tier-support tier-triple"
+        ),
+      ].join("");
+
+      document.getElementById("body3").innerHTML = [
+        rowHtml(
+          "Troop Skill Level 1 + support",
+          "Combat skill-1 plan + all 3 support tracks to 10",
+          "1 troop type",
+          add(skill1, oneTroopSupport),
+          "tier-combo"
+        ),
+        rowHtml(
+          "Troop Skill level 2 + support",
+          "Combat skill-2 plan + all 3 support tracks to 10",
+          "1 troop type",
+          add(skill2, oneTroopSupport),
+          "tier-combo"
+        ),
+        rowHtml(
+          "Ideal Joiner + support",
+          "Ideal joiner + all 3 support tracks to 10",
+          "1 troop type",
+          add(joiner, oneTroopSupport),
+          "tier-combo"
+        ),
+        rowHtml(
+          "Ideal Joiner × 2 + support × 2",
+          "Two camps combat joiner + support package each",
+          "2 troop types",
+          add(mul(joiner, 2), mul(oneTroopSupport, 2)),
+          "tier-combo tier-double"
+        ),
+        rowHtml(
+          "Ideal Joiner × 3 + support × 3",
+          "Three camps combat joiner + support package each",
+          "3 troop types",
+          add(mul(joiner, 3), mul(oneTroopSupport, 3)),
+          "tier-combo tier-triple"
+        ),
+      ].join("");
+    })();
+  
+  </script>
+</body>
+</html>
