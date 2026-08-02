@@ -89,12 +89,59 @@ body {
   border-color: rgba(96, 165, 250, 0.3);
   background: rgba(37, 99, 235, 0.08);
 }
-.guide h2 { color: #93c5fd; }
+.guide h2,
+.guide-summary {
+  color: #93c5fd;
+}
+.guide-summary,
+.inv-summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--text-2);
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
+.guide-summary {
+  color: #93c5fd;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+.guide-summary::-webkit-details-marker,
+.inv-summary::-webkit-details-marker {
+  display: none;
+}
+.guide-summary::before,
+.inv-summary::before {
+  content: "▸";
+  display: inline-block;
+  transition: transform 0.15s;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+details[open] > .guide-summary::before,
+details[open] > .inv-summary::before {
+  transform: rotate(90deg);
+}
+.inv-summary-hint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-2);
+  font-size: 0.78rem;
+}
 .guide-lead {
   font-size: 0.95rem;
   color: var(--text-0);
   line-height: 1.45;
-  margin-bottom: 10px;
+  margin: 10px 0;
 }
 .guide-list {
   margin: 0;
@@ -182,18 +229,41 @@ body {
 .troop-col.disabled-col {
   opacity: 0.55;
 }
+.troop-col.is-collapsed {
+  padding-bottom: 10px;
+}
 .troop-col-head {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 8px;
   margin-bottom: 8px;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.troop-col.is-collapsed .troop-col-head {
+  margin-bottom: 0;
+}
+.collapse-chevron {
+  flex-shrink: 0;
+  width: 1.1rem;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+.collapse-chevron::before {
+  content: "▸";
+}
+.troop-col:not(.is-collapsed) .collapse-chevron {
+  transform: rotate(90deg);
 }
 .troop-col-title {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 1;
+  min-width: 0;
 }
 .troop-col-title h3 {
   font-size: 1rem;
@@ -205,8 +275,13 @@ body {
   margin-top: 2px;
   font-weight: 400;
 }
+.desktop-only { display: block; }
+.mobile-only { display: none; }
 .troop-icon { font-size: 1.25rem; }
 .include-col { font-size: 0.75rem; flex-shrink: 0; }
+.troop-nodes[hidden] {
+  display: none !important;
+}
 
 .troop-nodes {
   /* Full tree visible; page scroll only (no inner panel scroll) */
@@ -761,78 +836,220 @@ select option {
   display: none !important;
 }
 
-/* ── Mobile polish ─────────────────────────────────────── */
-@media (max-width: 640px) {
+/* ── Mobile compact layout ─────────────────────────────── */
+@media (max-width: 960px) {
+  .desktop-only { display: none !important; }
+  .mobile-only { display: block !important; }
+
+  .collapse-chevron { display: inline-block; }
+
   .app {
-    padding: 12px 12px 56px;
-    padding-left: max(12px, env(safe-area-inset-left));
-    padding-right: max(12px, env(safe-area-inset-right));
+    padding: 8px 8px 48px;
+    padding-left: max(8px, env(safe-area-inset-left));
+    padding-right: max(8px, env(safe-area-inset-right));
   }
-  .brand-mark {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-  }
-  .brand-text h1 { font-size: 1rem; }
-  .header-actions .btn {
-    padding: 8px 10px;
-    font-size: 0.8rem;
-  }
-  .banner { font-size: 0.82rem; padding: 10px 12px; }
-  .card { padding: 12px; }
-  .inv-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .apply-scope { flex-direction: column; align-items: stretch; }
-  .scope-camp { min-width: 0; width: 100%; }
-  .scope-toggle { width: 100%; }
-  .scope-opt { flex: 1; justify-content: center; min-height: 40px; }
-  .chip-row {
+  .header {
+    margin-bottom: 8px;
     gap: 8px;
-    /* horizontal scroll fallback if chips overflow */
-    flex-wrap: wrap;
+  }
+  .brand { gap: 8px; }
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+  }
+  .brand-text h1 { font-size: 0.92rem; }
+  .brand-text p { font-size: 0.65rem; }
+  .header-actions { gap: 4px; }
+  .header-actions .btn {
+    padding: 5px 8px;
+    font-size: 0.72rem;
+    min-height: 32px;
+  }
+
+  .banner,
+  .compact-banner {
+    font-size: 0.75rem;
+    padding: 7px 10px;
+    margin-bottom: 8px;
+    line-height: 1.35;
+  }
+
+  .guide { margin-bottom: 8px; }
+  .guide-summary { padding: 2px 0; }
+  .guide-lead { font-size: 0.82rem; margin: 8px 0 6px; }
+  .guide-list { font-size: 0.78rem; line-height: 1.4; }
+  .guide-list.guide-steps li { margin-bottom: 5px; }
+
+  .layout { gap: 8px; }
+  .sidebar,
+  .main { gap: 8px; }
+
+  .card {
+    padding: 8px 10px;
+    border-radius: 12px;
+  }
+  .card h2 {
+    font-size: 0.65rem;
+    margin-bottom: 8px;
+  }
+  .hint { font-size: 0.72rem; margin: -2px 0 6px; }
+
+  .field { margin-bottom: 5px; gap: 2px; }
+  .field span { font-size: 0.62rem; }
+  .field input {
+    font-size: 16px;
+    padding: 6px 8px;
+    min-height: 36px;
+  }
+  select {
+    font-size: 16px;
+    padding: 6px 28px 6px 8px;
+    min-height: 36px;
+  }
+
+  .inv-grid { grid-template-columns: 1fr 1fr; gap: 4px 6px; }
+  .meta { font-size: 0.72rem; margin-top: 2px; }
+
+  .apply-scope {
+    gap: 6px 8px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+  }
+  .scope-toggle { width: 100%; gap: 4px; }
+  .scope-opt {
+    flex: 1;
+    justify-content: center;
+    min-height: 32px;
+    padding: 5px 8px;
+    font-size: 0.72rem;
+  }
+  .scope-camp { min-width: 0; width: 100%; margin-bottom: 0; }
+
+  .chip-row {
+    gap: 4px;
+    margin-bottom: 6px;
   }
   .chip {
-    font-size: 0.8rem;
-    padding: 10px 12px;
-    min-height: 40px;
+    font-size: 0.68rem;
+    padding: 5px 8px;
+    min-height: 28px;
   }
+  .preset-hint { font-size: 0.72rem; margin-top: 4px; }
+  .check { font-size: 0.75rem; gap: 6px; }
+
+  /* Compact bulk: two columns + full-width button */
   .bulk-row {
-    flex-direction: column;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    align-items: end;
   }
-  .bulk-row > div { min-width: 0; width: 100%; }
-  .bulk-row .btn { width: 100%; min-height: 44px; }
+  .bulk-row > div {
+    min-width: 0;
+    width: auto;
+    flex: unset;
+  }
+  .bulk-label {
+    font-size: 0.58rem;
+    margin-bottom: 2px;
+  }
+  .bulk select,
+  .bulk-row select {
+    min-height: 32px;
+    font-size: 14px;
+    padding: 4px 24px 4px 6px;
+  }
+  .bulk-row .btn {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 34px;
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+
+  .troop-columns { gap: 6px; }
+  .troop-col { padding: 8px 10px; }
+  .troop-col-title h3 { font-size: 0.92rem; }
+  .troop-icon { font-size: 1.05rem; }
+  .include-col { font-size: 0.68rem; }
+  .troop-hint { font-size: 0.62rem; }
+
+  .group-title {
+    font-size: 0.62rem;
+    margin: 8px 0 4px;
+    padding-bottom: 2px;
+  }
+  .group-title:first-child { margin-top: 2px; }
+
+  .node-row,
+  .troop-col .node-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 6px;
+    padding: 5px 0;
+  }
+  .node-row .name,
+  .troop-col .name {
+    grid-column: 1 / -1;
+    font-size: 0.78rem;
+  }
+  .order-badge {
+    font-size: 0.55rem;
+    padding: 1px 5px;
+    margin-top: 1px;
+  }
+  .node-row.has-prio.prio-1,
+  .node-row.has-prio.prio-2,
+  .node-row.has-prio.prio-3 {
+    padding-left: 6px;
+  }
   .troop-col .node-pair {
     min-width: 0;
     flex: 1;
   }
+  .node-pair label { font-size: 0.55rem; }
+  .node-pair select,
   .troop-col .node-pair select {
     min-width: 0;
     width: 100%;
+    min-height: 34px;
+    font-size: 14px;
+    padding: 4px 22px 4px 6px;
   }
-  .troop-col .node-row {
-    grid-template-columns: 1fr 1fr;
-    gap: 6px 8px;
-  }
-  .troop-col .name {
-    grid-column: 1 / -1;
-    font-size: 0.85rem;
-  }
-  .tot-table {
-    font-size: 0.75rem;
-  }
+
+  .tot-table { font-size: 0.72rem; }
+  .tot-table th { font-size: 0.58rem; padding: 3px 4px 6px; }
   .tot-table td {
-    font-size: 0.7rem;
-    padding: 8px 4px;
+    font-size: 0.68rem;
+    padding: 5px 4px;
+  }
+  .crystal {
+    margin-top: 8px;
+    padding-top: 8px;
+    font-size: 0.72rem;
+  }
+  .footer {
+    margin-top: 14px;
+    font-size: 0.68rem;
   }
   .prereq-note {
-    font-size: 0.8rem;
-    bottom: max(12px, env(safe-area-inset-bottom));
+    font-size: 0.75rem;
+    padding: 10px 12px;
+    bottom: max(10px, env(safe-area-inset-bottom));
   }
+}
+
+/* Hide collapse chevron on wide layout (always expanded) */
+@media (min-width: 961px) {
+  .collapse-chevron { display: none; }
+  .mobile-only { display: none !important; }
 }
 
 @media (max-width: 380px) {
   .inv-grid { grid-template-columns: 1fr; }
+  .bulk select,
+  .bulk-row select { font-size: 13px; }
 }
 
   </style>
@@ -857,8 +1074,8 @@ select option {
       </div>
     </header>
 
-    <section class="card guide" id="readiness-guide">
-      <h2>How to use this calculator</h2>
+    <details class="card guide" id="readiness-guide">
+      <summary class="guide-summary">How to use this calculator</summary>
       <p class="guide-lead">
         Plan T12 / Exalted research costs by setting <strong>current</strong> and <strong>target</strong>
         levels for each node. Totals update live in the Summary panel.
@@ -875,7 +1092,7 @@ select option {
         <li>
           Use <strong>Quick targets</strong> for common plans (Troop Skill, Ideal Joiner, max Molten tiers),
           or pick levels node-by-node. <em>Partial</em> applies to one camp; <em>All</em> applies to every camp.
-          Tap a camp header to focus Partial selection.
+          On mobile, tap a camp header to expand/collapse; only one camp open at a time.
         </li>
         <li>
           Keep <strong>Auto-raise in-tree prerequisites</strong> on so gear / Molten floors rise with your
@@ -888,11 +1105,10 @@ select option {
           <a href="https://www.whiteoutsurvival.wiki/research/" target="_blank" rel="noopener noreferrer">wiki research page</a>.
         </li>
       </ol>
-    </section>
+    </details>
 
-    <p class="banner">
-      <strong>T12 / Exalted only</strong> — no T11 Helios.
-      Meat/Wood costs count as both resources. Progress saves in this browser.
+    <p class="banner compact-banner">
+      <strong>T12 / Exalted only</strong> — no T11 Helios · Meat/Wood dual-count · Saves in browser
     </p>
 
     <div class="layout">
@@ -914,8 +1130,8 @@ select option {
           <div class="meta" id="speed-total">Effective speed: +0%</div>
         </section>
 
-        <section class="card">
-          <h2>Inventory (optional)</h2>
+        <details class="card inv-details" id="inventory-card">
+          <summary class="inv-summary">Inventory <span class="inv-summary-hint">(optional)</span></summary>
           <p class="hint">Subtracts from needed totals. Leave 0 to ignore.</p>
           <div class="inv-grid">
             <label class="field"><span>Refined FC</span><input type="number" class="inv" data-k="rfc" value="0" min="0" inputmode="numeric" /></label>
@@ -928,7 +1144,7 @@ select option {
             <label class="field"><span>Iron</span><input type="number" class="inv" data-k="iron" value="0" min="0" inputmode="numeric" /></label>
             <label class="field"><span>Speedups (min)</span><input type="number" class="inv" data-k="speedMin" value="0" min="0" inputmode="numeric" /></label>
           </div>
-        </section>
+        </details>
 
         <section class="card sticky-sum" id="summary-card">
           <h2>Summary</h2>
@@ -1285,6 +1501,12 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
   /** Camp focused for Partial selection (quick targets / bulk) */
   let focusTroop = "infantry";
   let lastPrereqNote = "";
+  /** On mobile, which camp panels are expanded (accordion-style). */
+  let troopExpanded = { infantry: true, lancer: false, marksman: false };
+
+  function isMobileLayout() {
+    return window.matchMedia("(max-width: 960px)").matches;
+  }
 
   function defaultNodes(troop) {
     const nodes = {};
@@ -1463,25 +1685,50 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
     }, 9000);
   }
 
-  // ── tree UI (all three camps visible) ────────────────────
+  // ── tree UI (all three camps visible; collapsible on mobile) ──
+  function campSummary(troop) {
+    const st = state[troop];
+    const nodes = T12_DATA.troops[troop];
+    let targets = 0;
+    let curSum = 0;
+    for (const n of nodes) {
+      const cur = st.nodes[n.id]?.cur || 0;
+      const tgt = st.nodes[n.id]?.tgt || 0;
+      curSum += cur;
+      if (tgt > 0) targets++;
+    }
+    return `${targets} target${targets === 1 ? "" : "s"} · cur sum ${curSum}`;
+  }
+
   function renderTree() {
     const tree = el("tree");
     let html = "";
+    const mobile = isMobileLayout();
+
+    // Desktop: always expanded
+    if (!mobile) {
+      for (const t of TROOPS) troopExpanded[t] = true;
+    }
 
     for (const troop of TROOPS) {
       const nodes = T12_DATA.troops[troop];
       const st = state[troop];
       const meta = T12_DATA.TROOP_META[troop];
+      const expanded = !mobile || !!troopExpanded[troop];
 
       html += `<section class="troop-col card${st.enabled ? "" : " disabled-col"}${
         focusTroop === troop ? " is-focus" : ""
-      }" data-troop="${troop}">
-        <header class="troop-col-head">
+      }${expanded ? "" : " is-collapsed"}" data-troop="${troop}">
+        <header class="troop-col-head" role="button" tabindex="0" aria-expanded="${expanded ? "true" : "false"}">
+          <span class="collapse-chevron" aria-hidden="true"></span>
           <div class="troop-col-title">
             <span class="troop-icon">${meta.icon}</span>
             <div>
               <h3>${meta.name}</h3>
-              <p class="troop-hint">Tap header to focus Partial selection</p>
+              <p class="troop-hint desktop-only">Tap header to focus Partial selection</p>
+              <p class="troop-hint mobile-only">${
+                expanded ? "Tap to collapse · focused for Partial" : campSummary(troop) + " · tap to expand"
+              }</p>
             </div>
           </div>
           <label class="check include-col">
@@ -1489,7 +1736,7 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
             In totals
           </label>
         </header>
-        <div class="troop-nodes">`;
+        <div class="troop-nodes"${expanded ? "" : " hidden"}>`;
 
       let lastGroup = "";
       for (const n of nodes) {
@@ -1572,14 +1819,33 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
     });
 
     tree.querySelectorAll(".troop-col-head").forEach((head) => {
-      head.addEventListener("click", (e) => {
+      const activate = (e) => {
         if (e.target.closest("input, label")) return;
         const col = head.closest(".troop-col");
-        focusTroop = col.dataset.troop;
+        const troop = col.dataset.troop;
+        focusTroop = troop;
         if (el("focus-troop")) el("focus-troop").value = focusTroop;
         const partial = document.querySelector('input[name="apply-scope"][value="partial"]');
         if (partial) partial.checked = true;
+
+        if (isMobileLayout()) {
+          // Accordion: one open camp at a time; tap open header again to collapse
+          if (troopExpanded[troop]) {
+            troopExpanded[troop] = false;
+          } else {
+            for (const t of TROOPS) troopExpanded[t] = false;
+            troopExpanded[troop] = true;
+          }
+          renderTree();
+        }
         syncScopeUi();
+      };
+      head.addEventListener("click", activate);
+      head.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          activate(e);
+        }
       });
     });
 
@@ -2066,7 +2332,30 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
     });
     el("focus-troop").addEventListener("change", () => {
       focusTroop = el("focus-troop").value;
+      if (isMobileLayout()) {
+        for (const t of TROOPS) troopExpanded[t] = t === focusTroop;
+        renderTree();
+      }
       syncScopeUi();
+    });
+
+    // Open guide/inventory on desktop; leave closed by default on mobile
+    function syncCollapsibleCards() {
+      if (!isMobileLayout()) {
+        document.querySelectorAll("details.guide, details.inv-details").forEach((d) => {
+          d.open = true;
+        });
+      }
+    }
+    syncCollapsibleCards();
+    let resizeT = 0;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeT);
+      resizeT = setTimeout(() => {
+        syncCollapsibleCards();
+        renderTree();
+        recompute();
+      }, 150);
     });
 
     el("speed-pct").addEventListener("input", () => {
