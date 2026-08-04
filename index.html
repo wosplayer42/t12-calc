@@ -1430,7 +1430,7 @@ details.stats-card[open] > .stats-summary::before {
   </style>
 </head>
 <body>
-<div class="app">
+  <div class="app">
     <div class="bg-orb bg-orb-1"></div>
     <div class="bg-orb bg-orb-2"></div>
 
@@ -1443,8 +1443,8 @@ details.stats-card[open] > .stats-summary::before {
         </div>
       </div>
       <div class="header-actions">
-        <a class="btn ghost" href="T12-Milestone-Costs-Standalone.html" title="Simple milestone cost table">Milestone table</a>
-        <a class="btn ghost" href="troops-train.html" title="T12 train and promote costs">Troop training</a>
+        <a class="btn ghost" data-nav="milestones" href="milestones.html" title="Simple milestone cost table">Milestone table</a>
+        <a class="btn ghost" data-nav="train" href="troops-train.html" title="T12 train and promote costs">Troop training</a>
         <button type="button" class="btn ghost" id="btn-reset" title="Reset research levels only (keeps speed & inventory)">Reset research</button>
         <button type="button" class="btn ghost" id="btn-theme" title="Toggle theme">◐</button>
       </div>
@@ -1475,8 +1475,8 @@ details.stats-card[open] > .stats-summary::before {
           targets. A toast appears when targets are adjusted.
         </li>
         <li>
-          Open the <a href="T12-Milestone-Costs-Standalone.html">Milestone cost tables</a> for from-zero research totals,
-          or <a href="troops-train.html">Troop training</a> for T12 train / promote costs.
+          Open the <a data-nav="milestones" href="milestones.html">Milestone cost tables</a> for from-zero research totals,
+          or <a data-nav="train" href="troops-train.html">Troop training</a> for T12 train / promote costs.
           Tree badges show State 1721 priority (Go to lvl 20 1st–4th · Molten II Focus 1st–4th).
           Game unlock chains outside the tree:
           <a href="https://www.whiteoutsurvival.wiki/research/" target="_blank" rel="noopener noreferrer">wiki research page</a>.
@@ -3233,6 +3233,21 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
     // Dismiss prereq toast on tap
     el("prereq-note")?.addEventListener("click", () => showPrereqNote(""));
   }
+
+  // Multi-file vs standalone link resolution (data-nav on header / guide links)
+  (function resolveNav() {
+    const file = (location.pathname.split("/").pop() || "").toLowerCase();
+    const standalone = file.includes("standalone");
+    const map = {
+      calc: standalone ? "T12-Exalted-Research-Standalone.html" : "index.html",
+      train: standalone ? "T12-Troop-Training-Standalone.html" : "troops-train.html",
+      milestones: standalone ? "T12-Milestone-Costs-Standalone.html" : "milestones.html",
+    };
+    document.querySelectorAll("[data-nav]").forEach((a) => {
+      const key = a.getAttribute("data-nav");
+      if (map[key]) a.setAttribute("href", map[key]);
+    });
+  })();
 
   // boot
   fillBulk();

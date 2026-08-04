@@ -283,8 +283,8 @@
         </div>
       </div>
       <div class="header-actions">
-        <a class="btn ghost" href="index.html">Research calculator</a>
-        <a class="btn ghost" href="milestones.html">Milestones</a>
+        <a class="btn ghost" data-nav="calc" href="index.html">← Back</a>
+        <a class="btn ghost" data-nav="milestones" href="milestones.html">Milestones</a>
         <button type="button" class="btn ghost" id="btn-theme" title="Toggle theme">◐</button>
       </div>
     </header>
@@ -383,12 +383,26 @@
     <p class="footer">
       Innocent Panda Labs · State 1721 · Unofficial fan tool.
       Promote RSS is fixed from in-game values; T11 train is your input.
-      <a href="index.html">Back to research calculator</a>
     </p>
   </div>
 
   <script>
 (() => {
+  // Multi-file vs standalone link resolution
+  (function resolveNav() {
+    const file = (location.pathname.split("/").pop() || "").toLowerCase();
+    const standalone = file.includes("standalone");
+    const map = {
+      calc: standalone ? "T12-Exalted-Research-Standalone.html" : "index.html",
+      train: standalone ? "T12-Troop-Training-Standalone.html" : "troops-train.html",
+      milestones: standalone ? "T12-Milestone-Costs-Standalone.html" : "milestones.html",
+    };
+    document.querySelectorAll("[data-nav]").forEach((a) => {
+      const key = a.getAttribute("data-nav");
+      if (map[key]) a.setAttribute("href", map[key]);
+    });
+  })();
+
   /**
    * Promote T11→T12 per-troop RSS (fixed, player-verified in-game).
    * No fixed T11 train costs — users enter those (they vary).
