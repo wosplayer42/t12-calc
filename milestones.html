@@ -309,7 +309,468 @@
     </p>
   </div>
 
-  <script src="data.js"></script>
+  <script>
+/**
+ * T12 / Exalted research cost tables
+ * Meat/Wood rows count as BOTH meat and wood (same value each).
+ */
+const T12_DATA = (() => {
+  // [steel, rfc, shard, meatWood, coal, iron, hours]
+  const empty = () => [0, 0, 0, 0, 0, 0, 0];
+
+  const head = [
+    [40000, 10, 70, 0, 0, 0, 0],
+    [60000, 15, 105, 0, 0, 0, 0],
+    [80000, 20, 140, 0, 0, 0, 0],
+    [100000, 25, 175, 0, 0, 0, 0],
+    [120000, 30, 210, 0, 0, 0, 0],
+  ];
+
+  // Shoulder / Body / Leg / Weapon share the same table
+  const gear = [
+    [36000, 10, 70, 0, 0, 0, 0],
+    [36000, 10, 70, 0, 0, 0, 0],
+    [54000, 15, 105, 0, 0, 0, 0],
+    [72000, 20, 140, 0, 0, 0, 0],
+    [108000, 30, 210, 0, 0, 0, 0],
+  ];
+
+  const skillsI = [
+    [15000, 2, 16, 500000, 100000, 25000, 10],
+    [15750, 2, 17, 520000, 100000, 26000, 10.5],
+    [16500, 2, 17, 550000, 110000, 27000, 11],
+    [17250, 2, 18, 570000, 110000, 28000, 11.5],
+    [18000, 3, 19, 600000, 120000, 30000, 12],
+    [18750, 3, 20, 620000, 120000, 31000, 12.5],
+    [19500, 3, 21, 650000, 130000, 32000, 13],
+    [21000, 3, 22, 700000, 140000, 35000, 14],
+    [22500, 3, 24, 750000, 150000, 37000, 15],
+    [24000, 4, 26, 800000, 160000, 40000, 16],
+    [25500, 4, 27, 850000, 170000, 42000, 17],
+    [27000, 4, 29, 900000, 180000, 45000, 18],
+    [28500, 4, 30, 950000, 190000, 47000, 19],
+    [30000, 5, 32, 1000000, 200000, 50000, 20],
+    [31500, 5, 34, 1000000, 210000, 52000, 21],
+    [33000, 5, 35, 1100000, 220000, 55000, 22],
+    [34500, 5, 37, 1100000, 230000, 57000, 23],
+    [36000, 6, 39, 1200000, 240000, 60000, 24],
+    [37500, 6, 40, 1200000, 250000, 62000, 25],
+    [39000, 6, 42, 1300000, 260000, 65000, 26],
+  ];
+
+  const troopSkill = [
+    [200000, 50, 325, 15000000, 3000000, 750000, 480],
+    [200000, 50, 325, 15000000, 3000000, 750000, 480],
+    [200000, 50, 325, 15000000, 3000000, 750000, 480],
+  ];
+
+  // Molten II Tier: 10 levels each of same cost bands
+  const skillsII = [];
+  const s2bands = [
+    { n: 10, row: [18000, 5, 75, 500000, 100000, 25000, 12] },
+    { n: 10, row: [22500, 6, 93, 620000, 120000, 31000, 15] },
+    { n: 10, row: [27000, 7, 112, 750000, 150000, 37000, 18] },
+    { n: 10, row: [31500, 8, 131, 870000, 170000, 43000, 21] },
+    { n: 10, row: [36000, 10, 150, 1000000, 200000, 50000, 24] },
+  ];
+  for (const b of s2bands) {
+    for (let i = 0; i < b.n; i++) skillsII.push(b.row.slice());
+  }
+
+  const solar = [
+    [25000, 5, 75, 500000, 100000, 25000, 12],
+    [26250, 5, 78, 520000, 100000, 26000, 12.6],
+    [27500, 5, 82, 550000, 110000, 27000, 13.2],
+    [30000, 6, 90, 600000, 120000, 30000, 14.4],
+    [32500, 6, 97, 650000, 130000, 32000, 15.6],
+    [35000, 7, 105, 700000, 140000, 35000, 16.8],
+    [37500, 7, 112, 750000, 150000, 37000, 18],
+    [40000, 8, 120, 800000, 160000, 40000, 19.2],
+    [42500, 8, 127, 850000, 170000, 42000, 20.4],
+    [45000, 9, 135, 900000, 180000, 45000, 21.6],
+    [47500, 9, 142, 950000, 190000, 47000, 22.8],
+    [50000, 10, 150, 1000000, 200000, 50000, 24],
+    [52500, 10, 157, 1000000, 200000, 50000, 25.2],
+    [57500, 11, 172, 1100000, 230000, 57000, 27.6],
+    [62500, 12, 187, 1200000, 250000, 62000, 30],
+  ];
+
+  const skillsIII = [];
+  const s3bands = [
+    { n: 10, row: [25000, 5, 125, 1000000, 200000, 50000, 48] },
+    { n: 10, row: [31250, 6, 156, 1200000, 250000, 62000, 60] },
+    { n: 10, row: [37500, 7, 187, 1500000, 300000, 75000, 72] },
+    { n: 10, row: [43750, 8, 218, 1700000, 350000, 87000, 84] },
+    { n: 10, row: [50000, 10, 250, 2000000, 400000, 100000, 96] },
+  ];
+  for (const b of s3bands) {
+    for (let i = 0; i < b.n; i++) skillsIII.push(b.row.slice());
+  }
+
+  // Exalted Healing / First Aid / Training (Lv 1–10) — same cost curve per track
+  // Time uses the same hours as Molten I Lv1–10 when provided; resources match player data.
+  const support = skillsI.slice(0, 10).map((r) => r.slice());
+
+  const GROUP = {
+    gear: "Exalted Gear (Unlock slots)",
+    molten1: "Molten I Tier",
+    unique: "Troop Skill (Unique)",
+    support: "Support · Healing / First Aid / Training",
+    molten2: "Molten II Tier",
+    solar: "Solar Supremacy",
+    molten3: "Molten III Tier",
+  };
+
+  /**
+   * Wiki effect helpers (whiteoutsurvival.wiki/research).
+   * values are cumulative at each level (Lv 1 → first entry).
+   * Note: node ids keep historical names; `stat` matches the wiki bonus type for priority badges.
+   *   shields/vambrace/grips → Defense
+   *   blades/lance/shot → Attack
+   *   plating/helmets/scales → Health
+   *   guard/tactics/sharpshooting → Lethality
+   */
+  const pctSeries = (perLevel, max) =>
+    Array.from({ length: max }, (_, i) => +(perLevel * (i + 1)).toFixed(2));
+  const flatSeries = (perLevel, max) =>
+    Array.from({ length: max }, (_, i) => perLevel * (i + 1));
+  const eff = (key, unit, values) => ({ key, unit, values });
+  // Wiki cumulative power at each level
+  const powerSeries = (perLevel, max) => flatSeries(perLevel, max);
+
+  const SUPPORT_GROUP = GROUP.support;
+  function supportNodesFor(troopName) {
+    const t = troopName; // Infantry / Lancer / Marksman
+    return [
+      {
+        id: "ex_training",
+        label: "Exalted Training",
+        group: GROUP.support,
+        max: 10,
+        table: support,
+        tier: 2,
+        kind: "support",
+        effect: eff(`${t} Training Cost Reduction`, "%", pctSeries(2.5, 10)),
+        power: powerSeries(17500, 10),
+      },
+      {
+        id: "ex_healing",
+        label: "Exalted Healing",
+        group: GROUP.support,
+        max: 10,
+        table: support,
+        tier: 2,
+        kind: "support",
+        effect: eff(`${t} Healing Cost Reduction`, "%", pctSeries(5, 10)),
+        power: powerSeries(35000, 10),
+      },
+      {
+        id: "ex_firstaid",
+        label: "Exalted First Aid",
+        group: GROUP.support,
+        max: 10,
+        table: support,
+        tier: 2,
+        kind: "support",
+        effect: eff(`${t} Healing Time Reduction`, "%", pctSeries(1.5, 10)),
+        power: powerSeries(10500, 10),
+      },
+    ];
+  }
+
+  function withSupport(list, troopName) {
+    // Insert support section after Troop Skill (unique), before Molten II
+    const out = [];
+    for (const n of list) {
+      out.push(n);
+      if (n.id === "unique") out.push(...supportNodesFor(troopName));
+    }
+    return out;
+  }
+
+  /** Build molten nodes: shields=def, blades=atk, plating=hp, guard=let (wiki). */
+  function moltenNodes(tier, names, table, max, troopName) {
+    // names: { shields, blades, plating, guard } display names without tier suffix
+    const kind = tier === 1 ? "molten1" : tier === 2 ? "molten2" : "molten3";
+    const group = tier === 1 ? GROUP.molten1 : tier === 2 ? GROUP.molten2 : GROUP.molten3;
+    const rom = tier === 1 ? "I" : tier === 2 ? "II" : "III";
+    // ids kept for localStorage: s1_atk=shields/def, s1_let=blades/atk, s1_hp=plating, s1_def=guard/let
+    const prefix = tier === 1 ? "s1" : tier === 2 ? "s2" : "s3";
+    // Wiki: molten I/II/III all +50,000 power per level (cumulative)
+    const pow = powerSeries(50000, max);
+    // Labels omit (Attack/Defense/…) — effect line under each node already names the bonus
+    return [
+      {
+        id: `${prefix}_atk`,
+        label: `${names.shields} ${rom}`,
+        group,
+        max,
+        table,
+        tier: tier + 1,
+        stat: "def",
+        kind,
+        effect: eff(`${troopName} Defense`, "%", pctSeries(1, max)),
+        power: pow,
+      },
+      {
+        id: `${prefix}_let`,
+        label: `${names.blades} ${rom}`,
+        group,
+        max,
+        table,
+        tier: tier + 1,
+        stat: "atk",
+        kind,
+        effect: eff(`${troopName} Attack`, "%", pctSeries(1, max)),
+        power: pow,
+      },
+      {
+        id: `${prefix}_hp`,
+        label: `${names.plating} ${rom}`,
+        group,
+        max,
+        table,
+        tier: tier + 1,
+        stat: "hp",
+        kind,
+        effect: eff(`${troopName} Health`, "%", pctSeries(1, max)),
+        power: pow,
+      },
+      {
+        id: `${prefix}_def`,
+        label: `${names.guard} ${rom}`,
+        group,
+        max,
+        table,
+        tier: tier + 1,
+        stat: "let",
+        kind,
+        effect: eff(`${troopName} Lethality`, "%", pctSeries(1, max)),
+        power: pow,
+      },
+    ];
+  }
+
+  function gearNodes(labels, troopName) {
+    // head = deployment; shoulder=atk; body=def; leg=let; weapon=hp (wiki)
+    // Wiki power: helm +180k/lv, other gear +150k/lv
+    return [
+      {
+        id: "head",
+        label: labels.head,
+        group: GROUP.gear,
+        max: 5,
+        table: head,
+        tier: 1,
+        kind: "gear",
+        effect: eff("Troops Deployment Capacity", "flat", flatSeries(600, 5)),
+        power: powerSeries(180000, 5),
+      },
+      {
+        id: "shoulder",
+        label: labels.shoulder,
+        group: GROUP.gear,
+        max: 5,
+        table: gear,
+        tier: 1,
+        kind: "gear",
+        effect: eff(`${troopName} Attack`, "%", pctSeries(3, 5)),
+        power: powerSeries(150000, 5),
+      },
+      {
+        id: "body",
+        label: labels.body,
+        group: GROUP.gear,
+        max: 5,
+        table: gear,
+        tier: 1,
+        kind: "gear",
+        effect: eff(`${troopName} Defense`, "%", pctSeries(3, 5)),
+        power: powerSeries(150000, 5),
+      },
+      {
+        id: "leg",
+        label: labels.leg,
+        group: GROUP.gear,
+        max: 5,
+        table: gear,
+        tier: 1,
+        kind: "gear",
+        effect: eff(`${troopName} Lethality`, "%", pctSeries(3, 5)),
+        power: powerSeries(150000, 5),
+      },
+      {
+        id: "weapon",
+        label: labels.weapon,
+        group: GROUP.gear,
+        max: 5,
+        table: gear,
+        tier: 1,
+        kind: "gear",
+        effect: eff(`${troopName} Health`, "%", pctSeries(3, 5)),
+        power: powerSeries(150000, 5),
+      },
+    ];
+  }
+
+  function buildTroop(troopName, gearLabels, moltenNames, uniqueLabel) {
+    return withSupport(
+      [
+        ...gearNodes(gearLabels, troopName),
+        ...moltenNodes(1, moltenNames, skillsI, 20, troopName),
+        {
+          id: "unique",
+          label: uniqueLabel,
+          group: GROUP.unique,
+          max: 3,
+          table: troopSkill,
+          tier: 2,
+          kind: "unique",
+          effect: eff(`Troop Skill (${uniqueLabel})`, "note", null),
+          effectNote: "Unique skill — see in-game / wiki for level bonuses",
+          power: powerSeries(350000, 3),
+        },
+        ...moltenNodes(2, moltenNames, skillsII, 50, troopName),
+        {
+          id: "solar",
+          label: "Solar Supremacy",
+          group: GROUP.solar,
+          max: 15,
+          table: solar,
+          tier: 3,
+          kind: "solar",
+          effect: eff("Troops Deployment Capacity", "flat", flatSeries(200, 15)),
+          power: powerSeries(60000, 15),
+        },
+        ...moltenNodes(3, moltenNames, skillsIII, 50, troopName),
+      ],
+      troopName
+    );
+  }
+
+  const troops = {
+    infantry: buildTroop(
+      "Infantry",
+      {
+        head: "Exalted Helm",
+        shoulder: "Exalted Shoulderguard",
+        body: "Exalted Bastion",
+        leg: "Exalted Trek",
+        weapon: "Exalted Armament",
+      },
+      { shields: "Molten Shields", blades: "Molten Blades", plating: "Molten Plating", guard: "Molten Guard" },
+      "Indomitable Wall"
+    ),
+    lancer: buildTroop(
+      "Lancer",
+      {
+        head: "Exalted Warcrown",
+        shoulder: "Exalted Pauldron",
+        body: "Exalted Platemail",
+        leg: "Exalted Warpath",
+        weapon: "Exalted Pike",
+      },
+      { shields: "Molten Vambrace", blades: "Molten Lance", plating: "Molten Helmets", guard: "Molten Tactics" },
+      "Meridian Phalanx"
+    ),
+    marksman: buildTroop(
+      "Marksman",
+      {
+        head: "Exalted Veil",
+        shoulder: "Exalted Mantle",
+        body: "Exalted War Garb",
+        leg: "Exalted Cadence",
+        weapon: "Exalted Blunderbuss",
+      },
+      { shields: "Molten Grips", blades: "Molten Shot", plating: "Molten Scales", guard: "Molten Sharpshooting" },
+      "Starfire"
+    ),
+  };
+
+  const TROOP_META = {
+    infantry: { name: "Infantry", icon: "🛡️" },
+    lancer: { name: "Lancer", icon: "🗡️" },
+    marksman: { name: "Marksman", icon: "🎯" },
+  };
+
+  /** Sum cost rows for levels (current, target] — levels are 1-indexed in tables */
+  function costRange(table, current, target) {
+    const out = empty();
+    const from = Math.max(0, current | 0);
+    const to = Math.min(table.length, Math.max(0, target | 0));
+    for (let lv = from; lv < to; lv++) {
+      const row = table[lv];
+      if (!row) continue;
+      for (let i = 0; i < 7; i++) out[i] += row[i] || 0;
+    }
+    return out;
+  }
+
+  function tier1Levels(state, troop) {
+    const nodes = troops[troop] || [];
+    return nodes.filter((n) => n.tier === 1).reduce((s, n) => s + (state[n.id]?.cur || 0), 0);
+  }
+
+  /** Cumulative effect value at a given level (0 = none). */
+  function effectAt(effect, level) {
+    if (!effect || !effect.values || level <= 0) return 0;
+    const i = Math.min(effect.values.length, Math.max(0, level | 0)) - 1;
+    if (i < 0) return 0;
+    return effect.values[i] || 0;
+  }
+
+  /** Cumulative research power at a given level (wiki Power column). */
+  function powerAt(node, level) {
+    if (!node || !node.power || level <= 0) return 0;
+    const i = Math.min(node.power.length, Math.max(0, level | 0)) - 1;
+    if (i < 0) return 0;
+    return node.power[i] || 0;
+  }
+
+  function formatEffectValue(effect, value) {
+    if (!effect) return "—";
+    if (effect.unit === "note") return "—";
+    if (effect.unit === "%") return `${Number(value).toFixed(2).replace(/\.?0+$/, "")}%`;
+    return Math.round(value).toLocaleString();
+  }
+
+  /** Cost of maxing one support track (Healing OR First Aid OR Training) to 10 */
+  function supportOneTrack() {
+    return costRange(support, 0, 10);
+  }
+
+  /** Cost of maxing all 3 support tracks for one troop type */
+  function supportOneTroop() {
+    const one = supportOneTrack();
+    return one.map((v) => v * 3);
+  }
+
+  /** Cost of maxing all 3 support tracks for all 3 troop types */
+  function supportAllTroops() {
+    return supportOneTroop().map((v) => v * 3);
+  }
+
+  return {
+    troops,
+    TROOP_META,
+    GROUP,
+    costRange,
+    tier1Levels,
+    effectAt,
+    powerAt,
+    formatEffectValue,
+    empty,
+    support,
+    supportOneTrack,
+    supportOneTroop,
+    supportAllTroops,
+    SUPPORT_GROUP,
+  };
+})();
+
+if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
+
+  </script>
   <script>
     (() => {
       // Multi-file vs standalone link resolution
