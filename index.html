@@ -166,6 +166,23 @@ details[open] > .inv-summary::before {
   word-break: break-word;
 }
 
+.presets-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.presets-head h2 {
+  margin-bottom: 0;
+}
+.check-inline {
+  font-size: 0.75rem;
+  margin: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 .apply-scope {
   display: flex;
   flex-wrap: wrap;
@@ -175,23 +192,30 @@ details[open] > .inv-summary::before {
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
 }
+.apply-scope-compact {
+  align-items: center;
+  gap: 8px 10px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+}
 .scope-toggle {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 .scope-opt {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
+  gap: 5px;
+  padding: 5px 10px;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--bg-1);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--text-1);
   cursor: pointer;
   user-select: none;
+  min-height: 32px;
 }
 .scope-opt:has(input:checked) {
   border-color: rgba(245, 158, 11, 0.45);
@@ -203,17 +227,65 @@ details[open] > .inv-summary::before {
   min-width: 150px;
   margin-bottom: 0;
 }
+.scope-camp-inline {
+  min-width: 0;
+  flex: 0 1 140px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0;
+}
+.scope-camp-inline span {
+  margin: 0;
+  white-space: nowrap;
+  font-size: 0.65rem;
+}
+.scope-camp-inline select {
+  min-height: 32px;
+  padding: 4px 28px 4px 8px;
+  font-size: 0.8rem;
+  width: auto;
+  min-width: 7.5rem;
+}
+
+.preset-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.preset-row {
+  display: grid;
+  grid-template-columns: 3.4rem 1fr;
+  gap: 6px 8px;
+  align-items: center;
+}
+.preset-row-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-2);
+  line-height: 1.2;
+}
+.preset-row .chip-row {
+  margin-bottom: 0;
+  gap: 4px;
+}
+.preset-row-support {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
 
 .troop-columns {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
-  align-items: start;
+  align-items: stretch;
 }
 @media (max-width: 1200px) {
-  .troop-columns { grid-template-columns: 1fr; }
-}
-@media (min-width: 700px) and (max-width: 1200px) {
   .troop-columns { grid-template-columns: 1fr; }
 }
 
@@ -221,6 +293,8 @@ details[open] > .inv-summary::before {
   min-width: 0;
   padding: 12px;
   transition: box-shadow 0.15s, border-color 0.15s;
+  display: flex;
+  flex-direction: column;
 }
 .troop-col.is-focus {
   border-color: rgba(245, 158, 11, 0.45);
@@ -604,7 +678,12 @@ select option {
 }
 .tot-row .label { color: var(--text-1); }
 .tot-row .val { font-family: var(--mono); font-weight: 500; }
-.preset-hint { margin-top: 8px; margin-bottom: 0; }
+.preset-hint {
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
 .empty { color: var(--text-2); font-size: 0.85rem; }
 
 .crystal {
@@ -617,27 +696,103 @@ select option {
 }
 .crystal strong { color: var(--text-0); }
 
-.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 6px;
+  margin-bottom: 0;
+  /* Fill horizontal width: wrap into as few rows as possible */
+  width: 100%;
+}
+.chip-row-dense {
+  margin-bottom: 6px;
+}
+.chip-row-support {
+  margin-bottom: 0;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
 .chip {
   font-family: var(--font);
-  font-size: 0.78rem;
-  padding: 8px 12px;
-  min-height: 36px;
+  font-size: 0.76rem;
+  padding: 6px 11px;
+  min-height: 32px;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--bg-1);
   color: var(--text-1);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  /* Prefer packing more chips per row on wide layouts */
+  flex: 0 1 auto;
 }
 .chip:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
+/* Active = last applied quick target still matches */
 .chip.active {
   color: #fff;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   border-color: transparent;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.28);
+  opacity: 1;
+}
+/* Faded = last selection after you edited targets by hand */
+.chip.active-faded {
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: transparent;
+  opacity: 0.38;
+  box-shadow: none;
+  filter: saturate(0.65);
+}
+.chip-support {
+  border-color: rgba(52, 211, 153, 0.35);
+  color: #6ee7b7;
+}
+.chip-support:hover {
+  border-color: #34d399;
+  color: #6ee7b7;
+}
+.chip-support.active {
+  color: #042f1a;
+  background: linear-gradient(135deg, #34d399, #10b981);
+  border-color: transparent;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.28);
+  opacity: 1;
+  filter: none;
+}
+.chip-support.active-faded {
+  color: #042f1a;
+  background: linear-gradient(135deg, #34d399, #10b981);
+  border-color: transparent;
+  opacity: 0.38;
+  box-shadow: none;
+  filter: saturate(0.65);
+}
+
+/* Desktop: use horizontal space better — denser wrap, less empty right */
+@media (min-width: 961px) {
+  .chip-row-dense {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+  }
+  .presets .chip {
+    font-size: 0.78rem;
+    padding: 6px 12px;
+  }
+  .apply-scope-compact {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+  }
+  .presets-head {
+    margin-bottom: 6px;
+  }
+  .preset-hint {
+    margin-top: 6px;
+  }
 }
 
 .check {
@@ -706,13 +861,26 @@ select option {
   background: rgba(167, 139, 250, 0.22);
   color: #c4b5fd;
 }
+.order-badge.prio-4 {
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+}
 .order-badge.prio-later {
   background: rgba(100, 116, 139, 0.2);
   color: #94a3b8;
 }
+.order-badge.prio-skip {
+  background: rgba(100, 116, 139, 0.12);
+  color: #64748b;
+}
 .order-badge.prio-unique {
   background: rgba(74, 222, 128, 0.15);
   color: #86efac;
+}
+.order-badge-empty {
+  visibility: hidden;
+  min-width: 4.5rem;
+  padding: 2px 7px;
 }
 .node-row.has-prio.prio-1 {
   border-left: 3px solid #f87171;
@@ -726,14 +894,168 @@ select option {
   border-left: 3px solid #a78bfa;
   padding-left: 8px;
 }
+.node-row.has-prio.prio-4 {
+  border-left: 3px solid #38bdf8;
+  padding-left: 8px;
+}
 .node-row .name {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
+  min-width: 0;
 }
 .node-row .name-text {
   display: block;
+  line-height: 1.25;
+}
+.name-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  min-height: 2.4rem; /* badge + effect reserved — keeps columns aligned */
+}
+.node-effect {
+  font-size: 0.68rem;
+  color: var(--text-1);
+  margin-top: 0;
+  line-height: 1.3;
+  font-weight: 400;
+  min-height: 1.05em;
+}
+.node-effect strong { color: var(--text-0); font-weight: 600; }
+.node-effect .eff-delta { color: var(--good); }
+.node-effect.note { color: var(--text-2); font-style: italic; }
+
+/* Desktop: consistent vertical rhythm across the three camps */
+@media (min-width: 1201px) {
+  .troop-col-head {
+    min-height: 3.25rem;
+    align-items: center;
+  }
+  .troop-hint.desktop-only {
+    /* one line so headers match */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 14rem;
+  }
+  .group-title {
+    min-height: 1.6rem;
+    display: flex;
+    align-items: flex-end;
+    margin-top: 12px;
+    margin-bottom: 6px;
+  }
+  .node-row {
+    min-height: 4.5rem;
+    align-items: center;
+    padding: 7px 0;
+  }
+  .node-pair {
+    min-width: 88px;
+  }
+  .node-pair select {
+    min-height: 40px;
+    font-size: 0.85rem;
+  }
+  .order-badge {
+    white-space: nowrap;
+  }
+}
+
+.stats-card { margin-top: 0; }
+.stats-summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--text-2);
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
+.stats-summary::-webkit-details-marker { display: none; }
+.stats-summary::before {
+  content: "▸";
+  display: inline-block;
+  transition: transform 0.15s;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--text-2);
+}
+details.stats-card[open] > .stats-summary::before {
+  transform: rotate(90deg);
+}
+.stats-summary .stats-src {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-2);
+  font-size: 0.7rem;
+}
+.stats-card #stats-chart {
+  margin-top: 10px;
+}
+.stats-hint {
+  font-size: 0.72rem;
+  color: var(--text-2);
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+.stats-table th {
+  text-align: right;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+  padding: 4px 6px 8px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+}
+.stats-table th:first-child { text-align: left; }
+.stats-table td {
+  padding: 6px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-1);
+}
+.stats-table td:first-child {
+  text-align: left;
+  color: var(--text-0);
+  font-size: 0.76rem;
+}
+.stats-table td.num {
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+.stats-table td.num.gain { color: var(--good); font-weight: 600; }
+.stats-table tr.stats-group td {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  padding-top: 10px;
+  border-bottom: none;
+  font-weight: 600;
+}
+.stats-foot {
+  margin-top: 8px;
+  font-size: 0.65rem;
+  color: var(--text-2);
+  line-height: 1.35;
 }
 
 .node-row {
@@ -843,6 +1165,37 @@ select option {
 
   .collapse-chevron { display: inline-block; }
 
+  /* Mobile: natural heights (no desktop equalization) */
+  .name-meta { min-height: 0; }
+  .order-badge-empty { display: none; }
+  .node-effect {
+    font-size: 0.62rem;
+    line-height: 1.25;
+  }
+  .node-effect .eff-delta { display: inline; }
+  .order-badge {
+    font-size: 0.55rem;
+    padding: 1px 6px;
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.25;
+  }
+  .troop-col.is-collapsed .name-meta { display: none; }
+
+  .stats-summary {
+    font-size: 0.68rem;
+    padding: 2px 0;
+  }
+  .stats-card #stats-chart { margin-top: 8px; }
+  .stats-table { font-size: 0.72rem; }
+  .stats-table td:first-child { font-size: 0.7rem; }
+  .stats-table td.num { font-size: 0.65rem; padding: 5px 4px; }
+  .stats-hint { font-size: 0.68rem; }
+
+  .sticky-sum {
+    position: static;
+  }
+
   .app {
     padding: 8px 8px 48px;
     padding-left: max(8px, env(safe-area-inset-left));
@@ -912,31 +1265,50 @@ select option {
   .inv-grid { grid-template-columns: 1fr 1fr; gap: 4px 6px; }
   .meta { font-size: 0.72rem; margin-top: 2px; }
 
-  .apply-scope {
-    gap: 6px 8px;
+  .presets-head { margin-bottom: 6px; }
+  .check-inline { font-size: 0.7rem; }
+
+  .apply-scope,
+  .apply-scope-compact {
+    gap: 6px;
     margin-bottom: 8px;
-    padding-bottom: 8px;
+    padding-bottom: 6px;
   }
-  .scope-toggle { width: 100%; gap: 4px; }
+  .scope-toggle { gap: 4px; flex: 1; }
   .scope-opt {
     flex: 1;
     justify-content: center;
-    min-height: 32px;
-    padding: 5px 8px;
-    font-size: 0.72rem;
+    min-height: 30px;
+    padding: 4px 8px;
+    font-size: 0.7rem;
   }
-  .scope-camp { min-width: 0; width: 100%; margin-bottom: 0; }
+  .scope-camp,
+  .scope-camp-inline {
+    min-width: 0;
+    width: 100%;
+    flex: 1 1 100%;
+    margin-bottom: 0;
+  }
+  .scope-camp-inline select {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+  }
 
-  .chip-row {
-    gap: 4px;
-    margin-bottom: 6px;
+  .preset-grid { gap: 5px; }
+  .preset-row {
+    grid-template-columns: 2.8rem 1fr;
+    gap: 4px 6px;
   }
+  .preset-row-label { font-size: 0.58rem; }
+  .chip-row { gap: 3px; }
   .chip {
-    font-size: 0.68rem;
-    padding: 5px 8px;
-    min-height: 28px;
+    font-size: 0.66rem;
+    padding: 4px 8px;
+    min-height: 26px;
   }
-  .preset-hint { font-size: 0.72rem; margin-top: 4px; }
+  .preset-hint { font-size: 0.65rem; margin-top: 6px; }
+  .preset-row-support { padding-top: 6px; margin-top: 2px; }
   .check { font-size: 0.75rem; gap: 6px; }
 
   /* Compact bulk: two columns + full-width button */
@@ -988,20 +1360,23 @@ select option {
     grid-template-columns: 1fr 1fr;
     gap: 2px 6px;
     padding: 5px 0;
+    min-height: 0;
   }
   .node-row .name,
   .troop-col .name {
     grid-column: 1 / -1;
     font-size: 0.78rem;
   }
+  .name-meta { gap: 1px; }
   .order-badge {
     font-size: 0.55rem;
     padding: 1px 5px;
-    margin-top: 1px;
+    margin-top: 0;
   }
   .node-row.has-prio.prio-1,
   .node-row.has-prio.prio-2,
-  .node-row.has-prio.prio-3 {
+  .node-row.has-prio.prio-3,
+  .node-row.has-prio.prio-4 {
     padding-left: 6px;
   }
   .troop-col .node-pair {
@@ -1069,6 +1444,7 @@ select option {
       </div>
       <div class="header-actions">
         <a class="btn ghost" href="T12-Milestone-Costs-Standalone.html" title="Simple milestone cost table">Milestone table</a>
+        <a class="btn ghost" href="troops-train.html" title="T12 train and promote costs">Troop training</a>
         <button type="button" class="btn ghost" id="btn-reset" title="Reset research levels only (keeps speed & inventory)">Reset research</button>
         <button type="button" class="btn ghost" id="btn-theme" title="Toggle theme">◐</button>
       </div>
@@ -1099,17 +1475,14 @@ select option {
           targets. A toast appears when targets are adjusted.
         </li>
         <li>
-          Open the <a href="T12-Milestone-Costs-Standalone.html">Milestone cost tables</a> for from-zero totals
-          (Troop Skill, Ideal Joiner, support). Tree badges show State 1721 priority
-          (Go to lvl 20 1st / 2nd / 3rd). Game unlock chains outside the tree:
+          Open the <a href="T12-Milestone-Costs-Standalone.html">Milestone cost tables</a> for from-zero research totals,
+          or <a href="troops-train.html">Troop training</a> for T12 train / promote costs.
+          Tree badges show State 1721 priority (Go to lvl 20 1st–4th · Molten II Focus 1st–4th).
+          Game unlock chains outside the tree:
           <a href="https://www.whiteoutsurvival.wiki/research/" target="_blank" rel="noopener noreferrer">wiki research page</a>.
         </li>
       </ol>
     </details>
-
-    <p class="banner compact-banner">
-      <strong>T12 / Exalted only</strong> — no T11 Helios · Meat/Wood dual-count · Saves in browser
-    </p>
 
     <div class="layout">
       <aside class="sidebar">
@@ -1153,13 +1526,26 @@ select option {
           </div>
           <div class="crystal" id="crystal-plan"></div>
         </section>
+
+        <details class="card stats-card" id="stats-details" aria-label="Stat bonuses from research">
+          <summary class="stats-summary">Stat bonuses <span class="stats-src">(wiki)</span></summary>
+          <div id="stats-chart">
+            <div class="empty">Stat bonuses appear as you set levels (wiki values).</div>
+          </div>
+        </details>
       </aside>
 
       <main class="main">
         <section class="card presets">
-          <h2>Quick targets</h2>
-          <div class="apply-scope">
-            <span class="bulk-label">Apply to</span>
+          <div class="presets-head">
+            <h2>Quick targets</h2>
+            <label class="check check-inline">
+              <input type="checkbox" id="auto-prereq" checked />
+              Auto-raise prerequisites
+            </label>
+          </div>
+
+          <div class="apply-scope apply-scope-compact">
             <div class="scope-toggle" role="group" aria-label="Quick target scope">
               <label class="scope-opt">
                 <input type="radio" name="apply-scope" value="partial" checked />
@@ -1170,7 +1556,7 @@ select option {
                 <span>All selection</span>
               </label>
             </div>
-            <label class="field scope-camp">
+            <label class="field scope-camp scope-camp-inline">
               <span>Camp (partial)</span>
               <select id="focus-troop">
                 <option value="infantry">Infantry</option>
@@ -1179,27 +1565,28 @@ select option {
               </select>
             </label>
           </div>
-          <div class="chip-row" id="presets">
-            <button type="button" class="chip" data-preset="unlock" title="Exalted gear slots only (all to Lv 5). Clears higher targets.">Max Exalted Gear</button>
-            <button type="button" class="chip" data-preset="unique1" title="Molten I Tier → 5 + Troop Skill Lv 1">Troop Skill Lv 1</button>
-            <button type="button" class="chip" data-preset="unique2" title="Molten I Tier → 10 + Troop Skill Lv 2">Troop Skill Lv 2</button>
-            <button type="button" class="chip" data-preset="joiner" title="Exalted Gear + Molten I Tier → 15 + Troop Skill max (3). Clears higher targets.">Ideal joiner (Gear + Molten I → 15 + Unique)</button>
-            <button type="button" class="chip" data-preset="skills1" title="Molten I Tier max (20) + Troop Skill max (3). Clears higher targets.">Max Molten I Tier + Unique</button>
-            <button type="button" class="chip" data-preset="solar5" title="Through Molten II Tier 30 + Solar 5">Solar Supremacy 5</button>
-            <button type="button" class="chip" data-preset="solar15" title="Through Molten II Tier 50 + Solar 15">Solar Supremacy 15</button>
-            <button type="button" class="chip" data-preset="skills2" title="Through Molten II Tier + Solar max">Max Molten II Tier + Solar</button>
-            <button type="button" class="chip" data-preset="skills3" title="Everything maxed including Molten III Tier">Max Molten III Tier</button>
-            <button type="button" class="chip" data-preset="full" title="Full tree max">Full tree max</button>
+
+          <div class="chip-row chip-row-dense" id="presets">
+            <button type="button" class="chip" data-preset="unlock" title="Exalted gear slots only (all to Lv 5). Clears higher combat targets. Support unchanged.">Max Exalted Gear</button>
+            <button type="button" class="chip" data-preset="unique1" title="Gear + Molten I → 5 + Troop Skill Lv 1. Support unchanged.">Troop Skill Lv 1</button>
+            <button type="button" class="chip" data-preset="unique2" title="Gear + Molten I → 10 + Troop Skill Lv 2. Support unchanged.">Troop Skill Lv 2</button>
+            <button type="button" class="chip" data-preset="joiner" title="Gear + Molten I → 15 + Unique Lv 3. Support unchanged.">Ideal joiner (Gear + Molten I → 15 + Unique)</button>
+            <button type="button" class="chip" data-preset="skills1" title="Gear + Molten I max (20) + Unique max. Support unchanged.">Max Molten I Tier + Unique</button>
+            <button type="button" class="chip" data-preset="solar5" title="Through Molten II 30 + Solar 5. Support unchanged.">Solar Supremacy 5</button>
+            <button type="button" class="chip" data-preset="solar10" title="Through Molten II 40 + Solar 10. Support unchanged.">Solar Supremacy 10</button>
+            <button type="button" class="chip" data-preset="solar15" title="Through Molten II 50 + Solar 15. Support unchanged.">Solar Supremacy 15</button>
+            <button type="button" class="chip" data-preset="skills3" title="Max combat tree through Molten III. Support unchanged.">Max Molten III Tier</button>
           </div>
+
+          <div class="chip-row chip-row-dense chip-row-support" id="presets-support">
+            <button type="button" class="chip chip-support" data-preset="support0" title="Clear support targets only (Lv 0). Combat targets unchanged.">Support → 0</button>
+            <button type="button" class="chip chip-support" data-preset="support10" title="All support tracks → Lv 10. Combat targets unchanged.">Support → 10</button>
+          </div>
+
           <p class="hint preset-hint">
-            Quick targets <strong>replace</strong> targets on the selected scope
-            (<strong>Partial</strong> = one camp · <strong>All</strong> = infantry + lancer + marksman).
-            Current levels are not changed.
+            Combat presets <strong>replace</strong> combat targets on the selected scope (Partial = one camp · All = every camp).
+            Support is separate. Current levels never change. Last quick target fades if you edit targets by hand.
           </p>
-          <label class="check">
-            <input type="checkbox" id="auto-prereq" checked />
-            Auto-raise in-tree prerequisites so targets stay valid
-          </label>
         </section>
 
         <section class="card bulk">
@@ -1345,88 +1732,270 @@ const T12_DATA = (() => {
     molten3: "Molten III Tier",
   };
 
-  const SUPPORT_GROUP = GROUP.support;
-  const supportNodes = [
-    { id: "ex_training", label: "Exalted Training", group: GROUP.support, max: 10, table: support, tier: 2, kind: "support" },
-    { id: "ex_healing", label: "Exalted Healing", group: GROUP.support, max: 10, table: support, tier: 2, kind: "support" },
-    { id: "ex_firstaid", label: "Exalted First Aid", group: GROUP.support, max: 10, table: support, tier: 2, kind: "support" },
-  ];
+  /**
+   * Wiki effect helpers (whiteoutsurvival.wiki/research).
+   * values are cumulative at each level (Lv 1 → first entry).
+   * Note: node ids keep historical names; `stat` matches the wiki bonus type for priority badges.
+   *   shields/vambrace/grips → Defense
+   *   blades/lance/shot → Attack
+   *   plating/helmets/scales → Health
+   *   guard/tactics/sharpshooting → Lethality
+   */
+  const pctSeries = (perLevel, max) =>
+    Array.from({ length: max }, (_, i) => +(perLevel * (i + 1)).toFixed(2));
+  const flatSeries = (perLevel, max) =>
+    Array.from({ length: max }, (_, i) => perLevel * (i + 1));
+  const eff = (key, unit, values) => ({ key, unit, values });
+  // Wiki cumulative power at each level
+  const powerSeries = (perLevel, max) => flatSeries(perLevel, max);
 
-  function withSupport(list) {
+  const SUPPORT_GROUP = GROUP.support;
+  function supportNodesFor(troopName) {
+    const t = troopName; // Infantry / Lancer / Marksman
+    return [
+      {
+        id: "ex_training",
+        label: "Exalted Training",
+        group: GROUP.support,
+        max: 10,
+        table: support,
+        tier: 2,
+        kind: "support",
+        effect: eff(`${t} Training Cost Reduction`, "%", pctSeries(2.5, 10)),
+        power: powerSeries(17500, 10),
+      },
+      {
+        id: "ex_healing",
+        label: "Exalted Healing",
+        group: GROUP.support,
+        max: 10,
+        table: support,
+        tier: 2,
+        kind: "support",
+        effect: eff(`${t} Healing Cost Reduction`, "%", pctSeries(5, 10)),
+        power: powerSeries(35000, 10),
+      },
+      {
+        id: "ex_firstaid",
+        label: "Exalted First Aid",
+        group: GROUP.support,
+        max: 10,
+        table: support,
+        tier: 2,
+        kind: "support",
+        effect: eff(`${t} Healing Time Reduction`, "%", pctSeries(1.5, 10)),
+        power: powerSeries(10500, 10),
+      },
+    ];
+  }
+
+  function withSupport(list, troopName) {
     // Insert support section after Troop Skill (unique), before Molten II
     const out = [];
     for (const n of list) {
       out.push(n);
-      if (n.id === "unique") out.push(...supportNodes.map((s) => ({ ...s })));
+      if (n.id === "unique") out.push(...supportNodesFor(troopName));
     }
     return out;
   }
 
-  /** @type {Record<string, {id:string,label:string,group:string,max:number,table:number[][],tier:number}[]>} */
+  /** Build molten nodes: shields=def, blades=atk, plating=hp, guard=let (wiki). */
+  function moltenNodes(tier, names, table, max, troopName) {
+    // names: { shields, blades, plating, guard } display names without tier suffix
+    const kind = tier === 1 ? "molten1" : tier === 2 ? "molten2" : "molten3";
+    const group = tier === 1 ? GROUP.molten1 : tier === 2 ? GROUP.molten2 : GROUP.molten3;
+    const rom = tier === 1 ? "I" : tier === 2 ? "II" : "III";
+    // ids kept for localStorage: s1_atk=shields/def, s1_let=blades/atk, s1_hp=plating, s1_def=guard/let
+    const prefix = tier === 1 ? "s1" : tier === 2 ? "s2" : "s3";
+    // Wiki: molten I/II/III all +50,000 power per level (cumulative)
+    const pow = powerSeries(50000, max);
+    // Labels omit (Attack/Defense/…) — effect line under each node already names the bonus
+    return [
+      {
+        id: `${prefix}_atk`,
+        label: `${names.shields} ${rom}`,
+        group,
+        max,
+        table,
+        tier: tier + 1,
+        stat: "def",
+        kind,
+        effect: eff(`${troopName} Defense`, "%", pctSeries(1, max)),
+        power: pow,
+      },
+      {
+        id: `${prefix}_let`,
+        label: `${names.blades} ${rom}`,
+        group,
+        max,
+        table,
+        tier: tier + 1,
+        stat: "atk",
+        kind,
+        effect: eff(`${troopName} Attack`, "%", pctSeries(1, max)),
+        power: pow,
+      },
+      {
+        id: `${prefix}_hp`,
+        label: `${names.plating} ${rom}`,
+        group,
+        max,
+        table,
+        tier: tier + 1,
+        stat: "hp",
+        kind,
+        effect: eff(`${troopName} Health`, "%", pctSeries(1, max)),
+        power: pow,
+      },
+      {
+        id: `${prefix}_def`,
+        label: `${names.guard} ${rom}`,
+        group,
+        max,
+        table,
+        tier: tier + 1,
+        stat: "let",
+        kind,
+        effect: eff(`${troopName} Lethality`, "%", pctSeries(1, max)),
+        power: pow,
+      },
+    ];
+  }
+
+  function gearNodes(labels, troopName) {
+    // head = deployment; shoulder=atk; body=def; leg=let; weapon=hp (wiki)
+    // Wiki power: helm +180k/lv, other gear +150k/lv
+    return [
+      {
+        id: "head",
+        label: labels.head,
+        group: GROUP.gear,
+        max: 5,
+        table: head,
+        tier: 1,
+        kind: "gear",
+        effect: eff("Troops Deployment Capacity", "flat", flatSeries(600, 5)),
+        power: powerSeries(180000, 5),
+      },
+      {
+        id: "shoulder",
+        label: labels.shoulder,
+        group: GROUP.gear,
+        max: 5,
+        table: gear,
+        tier: 1,
+        kind: "gear",
+        effect: eff(`${troopName} Attack`, "%", pctSeries(3, 5)),
+        power: powerSeries(150000, 5),
+      },
+      {
+        id: "body",
+        label: labels.body,
+        group: GROUP.gear,
+        max: 5,
+        table: gear,
+        tier: 1,
+        kind: "gear",
+        effect: eff(`${troopName} Defense`, "%", pctSeries(3, 5)),
+        power: powerSeries(150000, 5),
+      },
+      {
+        id: "leg",
+        label: labels.leg,
+        group: GROUP.gear,
+        max: 5,
+        table: gear,
+        tier: 1,
+        kind: "gear",
+        effect: eff(`${troopName} Lethality`, "%", pctSeries(3, 5)),
+        power: powerSeries(150000, 5),
+      },
+      {
+        id: "weapon",
+        label: labels.weapon,
+        group: GROUP.gear,
+        max: 5,
+        table: gear,
+        tier: 1,
+        kind: "gear",
+        effect: eff(`${troopName} Health`, "%", pctSeries(3, 5)),
+        power: powerSeries(150000, 5),
+      },
+    ];
+  }
+
+  function buildTroop(troopName, gearLabels, moltenNames, uniqueLabel) {
+    return withSupport(
+      [
+        ...gearNodes(gearLabels, troopName),
+        ...moltenNodes(1, moltenNames, skillsI, 20, troopName),
+        {
+          id: "unique",
+          label: uniqueLabel,
+          group: GROUP.unique,
+          max: 3,
+          table: troopSkill,
+          tier: 2,
+          kind: "unique",
+          effect: eff(`Troop Skill (${uniqueLabel})`, "note", null),
+          effectNote: "Unique skill — see in-game / wiki for level bonuses",
+          power: powerSeries(350000, 3),
+        },
+        ...moltenNodes(2, moltenNames, skillsII, 50, troopName),
+        {
+          id: "solar",
+          label: "Solar Supremacy",
+          group: GROUP.solar,
+          max: 15,
+          table: solar,
+          tier: 3,
+          kind: "solar",
+          effect: eff("Troops Deployment Capacity", "flat", flatSeries(200, 15)),
+          power: powerSeries(60000, 15),
+        },
+        ...moltenNodes(3, moltenNames, skillsIII, 50, troopName),
+      ],
+      troopName
+    );
+  }
+
   const troops = {
-    infantry: withSupport([
-      { id: "head", label: "Exalted Helm", group: GROUP.gear, max: 5, table: head, tier: 1, kind: "gear" },
-      { id: "shoulder", label: "Exalted Shoulderguard", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "body", label: "Exalted Bastion", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "leg", label: "Exalted Trek", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "weapon", label: "Exalted Armament", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "s1_atk", label: "Molten Shields I (Attack)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "atk", kind: "molten1" },
-      { id: "s1_let", label: "Molten Blades I (Lethality)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "let", kind: "molten1" },
-      { id: "s1_hp", label: "Molten Plating I (Health)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "hp", kind: "molten1" },
-      { id: "s1_def", label: "Molten Guard I (Defense)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "def", kind: "molten1" },
-      { id: "unique", label: "Indomitable Wall", group: GROUP.unique, max: 3, table: troopSkill, tier: 2, kind: "unique" },
-      { id: "s2_atk", label: "Molten Shields II (Attack)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "atk", kind: "molten2" },
-      { id: "s2_let", label: "Molten Blades II (Lethality)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "let", kind: "molten2" },
-      { id: "s2_hp", label: "Molten Plating II (Health)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "hp", kind: "molten2" },
-      { id: "s2_def", label: "Molten Guard II (Defense)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "def", kind: "molten2" },
-      { id: "solar", label: "Solar Supremacy", group: GROUP.solar, max: 15, table: solar, tier: 3, kind: "solar" },
-      { id: "s3_atk", label: "Molten Shields III (Attack)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "atk", kind: "molten3" },
-      { id: "s3_let", label: "Molten Blades III (Lethality)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "let", kind: "molten3" },
-      { id: "s3_hp", label: "Molten Plating III (Health)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "hp", kind: "molten3" },
-      { id: "s3_def", label: "Molten Guard III (Defense)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "def", kind: "molten3" },
-    ]),
-    lancer: withSupport([
-      { id: "head", label: "Exalted Warcrown", group: GROUP.gear, max: 5, table: head, tier: 1, kind: "gear" },
-      { id: "shoulder", label: "Exalted Pauldron", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "body", label: "Exalted Platemail", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "leg", label: "Exalted Warpath", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "weapon", label: "Exalted Pike", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "s1_atk", label: "Molten Vambrace I (Attack)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "atk", kind: "molten1" },
-      { id: "s1_let", label: "Molten Lance I (Lethality)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "let", kind: "molten1" },
-      { id: "s1_hp", label: "Molten Helmets I (Health)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "hp", kind: "molten1" },
-      { id: "s1_def", label: "Molten Tactics I (Defense)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "def", kind: "molten1" },
-      { id: "unique", label: "Meridian Phalanx", group: GROUP.unique, max: 3, table: troopSkill, tier: 2, kind: "unique" },
-      { id: "s2_atk", label: "Molten Vambrace II (Attack)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "atk", kind: "molten2" },
-      { id: "s2_let", label: "Molten Lance II (Lethality)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "let", kind: "molten2" },
-      { id: "s2_hp", label: "Molten Helmets II (Health)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "hp", kind: "molten2" },
-      { id: "s2_def", label: "Molten Tactics II (Defense)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "def", kind: "molten2" },
-      { id: "solar", label: "Solar Supremacy", group: GROUP.solar, max: 15, table: solar, tier: 3, kind: "solar" },
-      { id: "s3_atk", label: "Molten Vambrace III (Attack)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "atk", kind: "molten3" },
-      { id: "s3_let", label: "Molten Lance III (Lethality)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "let", kind: "molten3" },
-      { id: "s3_hp", label: "Molten Helmets III (Health)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "hp", kind: "molten3" },
-      { id: "s3_def", label: "Molten Tactics III (Defense)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "def", kind: "molten3" },
-    ]),
-    marksman: withSupport([
-      { id: "head", label: "Exalted Veil", group: GROUP.gear, max: 5, table: head, tier: 1, kind: "gear" },
-      { id: "shoulder", label: "Exalted Mantle", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "body", label: "Exalted War Garb", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "leg", label: "Exalted Cadence", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "weapon", label: "Exalted Blunderbuss", group: GROUP.gear, max: 5, table: gear, tier: 1, kind: "gear" },
-      { id: "s1_atk", label: "Molten Grips I (Attack)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "atk", kind: "molten1" },
-      { id: "s1_let", label: "Molten Shot I (Lethality)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "let", kind: "molten1" },
-      { id: "s1_hp", label: "Molten Scales I (Health)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "hp", kind: "molten1" },
-      { id: "s1_def", label: "Molten Sharpshooting I (Defense)", group: GROUP.molten1, max: 20, table: skillsI, tier: 2, stat: "def", kind: "molten1" },
-      { id: "unique", label: "Starfire", group: GROUP.unique, max: 3, table: troopSkill, tier: 2, kind: "unique" },
-      { id: "s2_atk", label: "Molten Grips II (Attack)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "atk", kind: "molten2" },
-      { id: "s2_let", label: "Molten Shot II (Lethality)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "let", kind: "molten2" },
-      { id: "s2_hp", label: "Molten Scales II (Health)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "hp", kind: "molten2" },
-      { id: "s2_def", label: "Molten Sharpshooting II (Defense)", group: GROUP.molten2, max: 50, table: skillsII, tier: 3, stat: "def", kind: "molten2" },
-      { id: "solar", label: "Solar Supremacy", group: GROUP.solar, max: 15, table: solar, tier: 3, kind: "solar" },
-      { id: "s3_atk", label: "Molten Grips III (Attack)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "atk", kind: "molten3" },
-      { id: "s3_let", label: "Molten Shot III (Lethality)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "let", kind: "molten3" },
-      { id: "s3_hp", label: "Molten Scales III (Health)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "hp", kind: "molten3" },
-      { id: "s3_def", label: "Molten Sharpshooting III (Defense)", group: GROUP.molten3, max: 50, table: skillsIII, tier: 4, stat: "def", kind: "molten3" },
-    ]),
+    infantry: buildTroop(
+      "Infantry",
+      {
+        head: "Exalted Helm",
+        shoulder: "Exalted Shoulderguard",
+        body: "Exalted Bastion",
+        leg: "Exalted Trek",
+        weapon: "Exalted Armament",
+      },
+      { shields: "Molten Shields", blades: "Molten Blades", plating: "Molten Plating", guard: "Molten Guard" },
+      "Indomitable Wall"
+    ),
+    lancer: buildTroop(
+      "Lancer",
+      {
+        head: "Exalted Warcrown",
+        shoulder: "Exalted Pauldron",
+        body: "Exalted Platemail",
+        leg: "Exalted Warpath",
+        weapon: "Exalted Pike",
+      },
+      { shields: "Molten Vambrace", blades: "Molten Lance", plating: "Molten Helmets", guard: "Molten Tactics" },
+      "Meridian Phalanx"
+    ),
+    marksman: buildTroop(
+      "Marksman",
+      {
+        head: "Exalted Veil",
+        shoulder: "Exalted Mantle",
+        body: "Exalted War Garb",
+        leg: "Exalted Cadence",
+        weapon: "Exalted Blunderbuss",
+      },
+      { shields: "Molten Grips", blades: "Molten Shot", plating: "Molten Scales", guard: "Molten Sharpshooting" },
+      "Starfire"
+    ),
   };
 
   const TROOP_META = {
@@ -1453,6 +2022,29 @@ const T12_DATA = (() => {
     return nodes.filter((n) => n.tier === 1).reduce((s, n) => s + (state[n.id]?.cur || 0), 0);
   }
 
+  /** Cumulative effect value at a given level (0 = none). */
+  function effectAt(effect, level) {
+    if (!effect || !effect.values || level <= 0) return 0;
+    const i = Math.min(effect.values.length, Math.max(0, level | 0)) - 1;
+    if (i < 0) return 0;
+    return effect.values[i] || 0;
+  }
+
+  /** Cumulative research power at a given level (wiki Power column). */
+  function powerAt(node, level) {
+    if (!node || !node.power || level <= 0) return 0;
+    const i = Math.min(node.power.length, Math.max(0, level | 0)) - 1;
+    if (i < 0) return 0;
+    return node.power[i] || 0;
+  }
+
+  function formatEffectValue(effect, value) {
+    if (!effect) return "—";
+    if (effect.unit === "note") return "—";
+    if (effect.unit === "%") return `${Number(value).toFixed(2).replace(/\.?0+$/, "")}%`;
+    return Math.round(value).toLocaleString();
+  }
+
   /** Cost of maxing one support track (Healing OR First Aid OR Training) to 10 */
   function supportOneTrack() {
     return costRange(support, 0, 10);
@@ -1475,6 +2067,9 @@ const T12_DATA = (() => {
     GROUP,
     costRange,
     tier1Levels,
+    effectAt,
+    powerAt,
+    formatEffectValue,
     empty,
     support,
     supportOneTrack,
@@ -1747,13 +2342,18 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
         const badge = pathBadge(troop, n);
         const badgeHtml = badge
           ? `<span class="order-badge ${badge.cls}" title="State 1721 preferred order">${badge.text}</span>`
-          : "";
+          : `<span class="order-badge order-badge-empty" aria-hidden="true"></span>`;
         const prioCls = badge ? ` has-prio ${badge.cls}` : "";
+        const curLv = st.nodes[n.id]?.cur || 0;
+        const tgtLv = st.nodes[n.id]?.tgt || 0;
         html += `
           <div class="node-row${prioCls}" data-troop="${troop}" data-id="${n.id}">
             <div class="name">
               <span class="name-text">${n.label} <span class="max">/${n.max}</span></span>
-              ${badgeHtml}
+              <div class="name-meta">
+                ${badgeHtml}
+                ${effectLine(n, curLv, tgtLv)}
+              </div>
             </div>
             <div class="node-pair">
               <label>Cur</label>
@@ -1769,6 +2369,7 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
     }
 
     tree.innerHTML = html;
+    equalizeTroopColumns();
 
     tree.querySelectorAll("select.cur").forEach((sel) => {
       const troop = sel.dataset.troop;
@@ -1779,6 +2380,7 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
         st.nodes[id].cur = clamp(parseInt(sel.value, 10) || 0, 0, maxOf(troop, id));
         if (st.nodes[id].tgt > 0 && st.nodes[id].tgt < st.nodes[id].cur) {
           st.nodes[id].tgt = st.nodes[id].cur;
+          clearPresetActive("all");
         }
         const note = maybePrereqs(troop);
         if (note) showPrereqNote(note);
@@ -1801,6 +2403,9 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
         if (st.nodes[id].tgt > 0 && st.nodes[id].tgt < st.nodes[id].cur) {
           st.nodes[id].cur = st.nodes[id].tgt;
         }
+        // Manual target edit — deselect quick-target chip (back to lighter style)
+        const node = T12_DATA.troops[troop].find((x) => x.id === id);
+        clearPresetActive(node && node.kind === "support" ? "support" : "combat");
         const note = maybePrereqs(troop);
         if (note) showPrereqNote(note);
         save();
@@ -1850,6 +2455,43 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
     });
 
     syncScopeUi();
+  }
+
+  /**
+   * Desktop: make Infantry / Lancer / Marksman rows line up vertically
+   * (same header, group-title, and node-row heights across the three columns).
+   */
+  function equalizeTroopColumns() {
+    const tree = el("tree");
+    if (!tree) return;
+
+    // Clear previous inline heights
+    tree.querySelectorAll(".troop-col-head, .group-title, .node-row, .name-meta").forEach((el) => {
+      el.style.minHeight = "";
+    });
+
+    if (isMobileLayout()) return;
+
+    const cols = [...tree.querySelectorAll(".troop-col")];
+    if (cols.length < 2) return;
+
+    const syncHeights = (selector) => {
+      const lists = cols.map((c) => [...c.querySelectorAll(selector)]);
+      const count = Math.max(0, ...lists.map((l) => l.length));
+      for (let i = 0; i < count; i++) {
+        const els = lists.map((l) => l[i]).filter(Boolean);
+        if (els.length < 2) continue;
+        const h = Math.max(...els.map((e) => e.getBoundingClientRect().height));
+        if (h > 0) els.forEach((e) => {
+          e.style.minHeight = `${Math.ceil(h)}px`;
+        });
+      }
+    };
+
+    // Headers first, then group titles, then each research row
+    syncHeights(".troop-col-head");
+    syncHeights(".group-title");
+    syncHeights(".node-row");
   }
 
   function maxOf(troop, id) {
@@ -1966,27 +2608,66 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
   }
 
   // ── State 1721 order badges (visual only on tree) ────────
-  /** Badge metadata for preferred order (visual only). */
+  /**
+   * Priority (wiki-aligned stats):
+   * 1st Inf Health+Defense · 2nd MM Attack+Lethality ·
+   * 3rd MM Health+Defense · 4th Lancer Attack+Lethality
+   */
   function pathBadge(troop, n) {
     if (n.kind === "gear") {
       return { cls: "prio-gear", text: "Req. before Molten I" };
     }
-    if (troop === "infantry" && n.kind === "molten1" && (n.stat === "hp" || n.stat === "def")) {
-      return { cls: "prio-1", text: "Go to lvl 20 1st" };
-    }
-    if (troop === "marksman" && n.kind === "molten1" && (n.stat === "atk" || n.stat === "let")) {
-      return { cls: "prio-2", text: "Go to lvl 20 2nd" };
-    }
-    if (troop === "marksman" && n.kind === "molten1" && (n.stat === "hp" || n.stat === "def")) {
-      return { cls: "prio-3", text: "Go to lvl 20 3rd" };
-    }
     if (n.kind === "molten1") {
+      if (troop === "infantry" && (n.stat === "hp" || n.stat === "def")) {
+        return { cls: "prio-1", text: "Go to lvl 20 1st" };
+      }
+      if (troop === "marksman" && (n.stat === "atk" || n.stat === "let")) {
+        return { cls: "prio-2", text: "Go to lvl 20 2nd" };
+      }
+      if (troop === "marksman" && (n.stat === "hp" || n.stat === "def")) {
+        return { cls: "prio-3", text: "Go to lvl 20 3rd" };
+      }
+      if (troop === "lancer" && (n.stat === "atk" || n.stat === "let")) {
+        return { cls: "prio-4", text: "Go to lvl 20 4th" };
+      }
       return { cls: "prio-later", text: "Go to lvl 20 later" };
+    }
+    if (n.kind === "molten2") {
+      if (troop === "infantry" && (n.stat === "hp" || n.stat === "def")) {
+        return { cls: "prio-1", text: "Focus 1st" };
+      }
+      if (troop === "marksman" && (n.stat === "atk" || n.stat === "let")) {
+        return { cls: "prio-2", text: "Focus 2nd" };
+      }
+      if (troop === "marksman" && (n.stat === "hp" || n.stat === "def")) {
+        return { cls: "prio-3", text: "Focus 3rd" };
+      }
+      if (troop === "lancer" && (n.stat === "atk" || n.stat === "let")) {
+        return { cls: "prio-4", text: "Focus 4th" };
+      }
+      return { cls: "prio-skip", text: "not priority" };
     }
     if (n.kind === "unique") {
       return { cls: "prio-unique", text: "Ideal joiner capstone" };
     }
     return null;
+  }
+
+  function effectLine(n, cur, tgt) {
+    const eff = n.effect;
+    if (!eff) return "";
+    if (eff.unit === "note" || n.effectNote) {
+      return `<div class="node-effect note">${n.effectNote || "See wiki for bonuses"}</div>`;
+    }
+    const atCur = T12_DATA.effectAt(eff, cur);
+    const useTgt = tgt > 0 ? tgt : cur;
+    const atTgt = T12_DATA.effectAt(eff, useTgt);
+    const curS = T12_DATA.formatEffectValue(eff, atCur);
+    const tgtS = T12_DATA.formatEffectValue(eff, atTgt);
+    if (tgt > 0 && tgt !== cur) {
+      return `<div class="node-effect">${eff.key}: <strong>${curS}</strong> → <strong>${tgtS}</strong></div>`;
+    }
+    return `<div class="node-effect">${eff.key}: <strong>${curS}</strong></div>`;
   }
 
   // ── cost engine ──────────────────────────────────────────
@@ -2076,6 +2757,7 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
     if (!any) {
       box.innerHTML = `<div class="empty">Set current → target levels to see costs.</div>`;
       el("crystal-plan").innerHTML = "";
+      renderStatsChart();
       return;
     }
 
@@ -2161,6 +2843,110 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
       Net FC after inventory: <strong>${fmt(netFc)}</strong><br/>
       Weeks @ 46 Super Refinements/week (~1,150 FC → 91 rFC): <strong>${weeks.toFixed(1)}</strong>
     `;
+
+    renderStatsChart();
+  }
+
+  /**
+   * Aggregate wiki bonuses + research power for current / target levels (enabled camps).
+   */
+  function renderStatsChart() {
+    const box = el("stats-chart");
+    if (!box) return;
+
+    /** @type {Record<string, {cur:number, tgt:number, unit:string}>} */
+    const agg = {};
+    let powerCur = 0;
+    let powerTgt = 0;
+
+    for (const troop of TROOPS) {
+      const st = state[troop];
+      if (!st.enabled) continue;
+      for (const n of T12_DATA.troops[troop]) {
+        const cur = st.nodes[n.id]?.cur || 0;
+        let tgt = st.nodes[n.id]?.tgt || 0;
+        if (tgt < cur) tgt = cur;
+        const tgtUse = tgt > 0 ? tgt : cur;
+
+        powerCur += T12_DATA.powerAt(n, cur);
+        powerTgt += T12_DATA.powerAt(n, tgtUse);
+
+        const eff = n.effect;
+        if (!eff || eff.unit === "note" || !eff.values) continue;
+        const key = eff.key;
+        if (!agg[key]) agg[key] = { cur: 0, tgt: 0, unit: eff.unit };
+        agg[key].cur += T12_DATA.effectAt(eff, cur);
+        agg[key].tgt += T12_DATA.effectAt(eff, tgtUse);
+      }
+    }
+
+    const keys = Object.keys(agg).sort((a, b) => a.localeCompare(b));
+    const hasPower = powerCur > 0 || powerTgt > 0;
+    if (!keys.length && !hasPower) {
+      box.innerHTML = `<div class="empty">Stat bonuses appear as you set levels (wiki values).</div>`;
+      return;
+    }
+
+    // Group for readability — Power first
+    const groups = {
+      Power: [], // filled specially
+      Combat: keys.filter((k) => /Attack|Defense|Health|Lethality/.test(k)),
+      Deployment: keys.filter((k) => /Deployment/.test(k)),
+      Support: keys.filter((k) => /Training|Healing/.test(k)),
+      Other: keys.filter(
+        (k) =>
+          !/Attack|Defense|Health|Lethality|Deployment|Training|Healing/.test(k)
+      ),
+    };
+
+    const fmtVal = (unit, v) => {
+      if (unit === "%") {
+        const s = Number(v).toFixed(2).replace(/\.?0+$/, "");
+        return `${s}%`;
+      }
+      return Math.round(v).toLocaleString();
+    };
+
+    let html = `<p class="stats-hint">Current vs planned targets. Power is research power (wiki).</p>`;
+    html += `<table class="stats-table"><thead><tr>
+      <th>Bonus</th><th>Current</th><th>At targets</th><th>Gain</th>
+    </tr></thead><tbody>`;
+
+    if (hasPower) {
+      const gain = powerTgt - powerCur;
+      html += `<tr class="stats-group"><td colspan="4">Power</td></tr>`;
+      html += `<tr>
+        <td>Research Power</td>
+        <td class="num">${fmt(powerCur)}</td>
+        <td class="num">${fmt(powerTgt)}</td>
+        <td class="num${gain > 0 ? " gain" : ""}">${
+          gain === 0 ? "—" : `+${fmt(gain)}`
+        }</td>
+      </tr>`;
+    }
+
+    for (const [gName, gKeys] of Object.entries(groups)) {
+      if (gName === "Power" || !gKeys.length) continue;
+      html += `<tr class="stats-group"><td colspan="4">${gName}</td></tr>`;
+      for (const key of gKeys) {
+        const a = agg[key];
+        const gain = a.tgt - a.cur;
+        const gainCls = gain > 0 ? "gain" : gain < 0 ? "loss" : "";
+        const gainTxt =
+          gain === 0
+            ? "—"
+            : `${gain > 0 ? "+" : ""}${fmtVal(a.unit, gain)}`;
+        html += `<tr>
+          <td>${key}</td>
+          <td class="num">${fmtVal(a.unit, a.cur)}</td>
+          <td class="num">${fmtVal(a.unit, a.tgt)}</td>
+          <td class="num ${gainCls}">${gainTxt}</td>
+        </tr>`;
+      }
+    }
+    html += `</tbody></table>`;
+    html += `<p class="stats-foot">Values from whiteoutsurvival.wiki · unique skill effects (non-power) listed in-game only</p>`;
+    box.innerHTML = html;
   }
 
   // ── presets ──────────────────────────────────────────────
@@ -2174,10 +2960,6 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
     const st = state[troop];
     const nodes = T12_DATA.troops[troop];
 
-    for (const n of nodes) {
-      st.nodes[n.id].tgt = 0;
-    }
-
     const setTgt = (pred, level) => {
       for (const n of nodes) {
         if (pred(n)) {
@@ -2190,8 +2972,23 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
       }
     };
 
+    // Support presets only touch Healing / First Aid / Training
+    if (name === "support0") {
+      setTgt((n) => n.kind === "support", 0);
+      return "";
+    }
+    if (name === "support10") {
+      setTgt((n) => n.kind === "support", 10);
+      if (el("auto-prereq")?.checked) return maybePrereqs(troop);
+      return "";
+    }
+
+    // Combat presets: clear combat targets only — leave support as-is
+    for (const n of nodes) {
+      if (n.kind !== "support") st.nodes[n.id].tgt = 0;
+    }
+
     if (name === "unlock") {
-      // Max exalted gear slots only
       setTgt((n) => n.kind === "gear", 5);
     } else if (name === "unique1") {
       setTgt((n) => n.kind === "gear", 5);
@@ -2215,28 +3012,56 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
       setTgt((n) => n.kind === "unique", 3);
       setTgt((n) => n.kind === "molten2", 30);
       setTgt((n) => n.kind === "solar", 5);
+    } else if (name === "solar10") {
+      setTgt((n) => n.kind === "gear", 5);
+      setTgt((n) => n.kind === "molten1", 20);
+      setTgt((n) => n.kind === "unique", 3);
+      setTgt((n) => n.kind === "molten2", 40);
+      setTgt((n) => n.kind === "solar", 10);
     } else if (name === "solar15") {
       setTgt((n) => n.kind === "gear", 5);
       setTgt((n) => n.kind === "molten1", 20);
       setTgt((n) => n.kind === "unique", 3);
       setTgt((n) => n.kind === "molten2", 50);
       setTgt((n) => n.kind === "solar", 15);
-    } else if (name === "skills2") {
-      setTgt((n) => n.kind === "gear", 5);
-      setTgt((n) => n.kind === "molten1", 20);
-      setTgt((n) => n.kind === "unique", 3);
-      setTgt((n) => n.kind === "molten2", 50);
-      setTgt((n) => n.kind === "solar", 15);
-    } else if (name === "skills3" || name === "full") {
+    } else if (name === "skills3") {
+      // Max combat tree only (not support)
       for (const n of nodes) {
+        if (n.kind === "support") continue;
         st.nodes[n.id].tgt = Math.min(n.max, Math.max(n.max, st.nodes[n.id].cur || 0));
       }
     }
 
-    if (el("auto-prereq")?.checked && name !== "unlock") {
+    if (el("auto-prereq")?.checked && name !== "unlock" && name !== "support0") {
       return maybePrereqs(troop);
     }
     return "";
+  }
+
+  /**
+   * After a manual target edit: keep the last quick-target chip visible but faded
+   * so you still see what was applied without implying it still matches.
+   * which: "combat" | "support" | "all"
+   */
+  function clearPresetActive(which) {
+    const fade = (rootId) => {
+      const root = el(rootId);
+      if (!root) return;
+      root.querySelectorAll(".chip.active").forEach((c) => {
+        c.classList.remove("active");
+        c.classList.add("active-faded");
+      });
+    };
+    if (which === "all" || which === "combat") fade("presets");
+    if (which === "all" || which === "support") fade("presets-support");
+  }
+
+  function markPresetActive(btn, groupRoot) {
+    if (!btn || !groupRoot) return;
+    groupRoot.querySelectorAll(".chip").forEach((c) => {
+      c.classList.remove("active", "active-faded");
+    });
+    btn.classList.add("active");
   }
 
   function applyPreset(name) {
@@ -2262,6 +3087,7 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
     const curV = el("bulk-cur").value;
     const tgtV = el("bulk-tgt").value;
     const notes = [];
+    if (tgtV !== "") clearPresetActive("all");
     for (const troop of getScope()) {
       const st = state[troop];
       const nodes = T12_DATA.troops[troop];
@@ -2339,12 +3165,14 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
       syncScopeUi();
     });
 
-    // Open guide/inventory on desktop; leave closed by default on mobile
+    // Open guide/inventory/stats on desktop; stats stay closed by default on mobile
     function syncCollapsibleCards() {
       if (!isMobileLayout()) {
-        document.querySelectorAll("details.guide, details.inv-details").forEach((d) => {
-          d.open = true;
-        });
+        document
+          .querySelectorAll("details.guide, details.inv-details, details.stats-card")
+          .forEach((d) => {
+            d.open = true;
+          });
       }
     }
     syncCollapsibleCards();
@@ -2355,6 +3183,8 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
         syncCollapsibleCards();
         renderTree();
         recompute();
+        // equalize again after layout settles (fonts / wrap)
+        requestAnimationFrame(() => equalizeTroopColumns());
       }, 150);
     });
 
@@ -2373,13 +3203,18 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
       })
     );
 
-    el("presets").addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-preset]");
-      if (!btn) return;
-      el("presets").querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
-      btn.classList.add("active");
-      applyPreset(btn.dataset.preset);
-    });
+    function wirePresetRow(rowId) {
+      const row = el(rowId);
+      if (!row) return;
+      row.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-preset]");
+        if (!btn) return;
+        markPresetActive(btn, row);
+        applyPreset(btn.dataset.preset);
+      });
+    }
+    wirePresetRow("presets");
+    wirePresetRow("presets-support");
 
     el("btn-theme").addEventListener("click", () => {
       const cur = document.documentElement.getAttribute("data-theme") || "dark";
@@ -2405,6 +3240,11 @@ if (typeof globalThis !== "undefined") globalThis.T12_DATA = T12_DATA;
   applyPrefsToDom();
   renderTree();
   recompute();
+  // After webfonts load, re-align desktop columns
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => equalizeTroopColumns()).catch(() => {});
+  }
+  window.addEventListener("load", () => equalizeTroopColumns());
 })();
 
   </script>
